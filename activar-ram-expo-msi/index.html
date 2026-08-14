@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activar EXPO (A-XMP) en tu MSI B850 Tomahawk — Sube tu RAM de 4800 a 6000 MHz</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d2230; --line:#2a3142;
+    --red:#e4002b; --red2:#ff2d4f; --txt:#e8ecf4; --mut:#98a2b8;
+    --ok:#2ec26a; --warn:#ffb020; --accent:#5aa9ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0a0c11,#0d0f14 300px);color:var(--txt);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 20px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(600px 200px at 50% -40px,rgba(228,0,43,.18),transparent)}
+  header .kick{color:var(--red2);font-weight:700;letter-spacing:2px;font-size:13px;text-transform:uppercase}
+  header h1{font-size:34px;margin:10px 0 6px;line-height:1.2}
+  header p{color:var(--mut);margin:0;font-size:16px}
+  h2{font-size:24px;margin:48px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--red2);font-variant-numeric:tabular-nums}
+  .lead{color:var(--mut);margin:4px 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td b{color:#fff}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(46,194,106,.15);color:var(--ok)}
+  .pill.warn{background:rgba(255,176,32,.15);color:var(--warn)}
+  .step{display:flex;gap:18px;margin:22px 0;align-items:flex-start}
+  .step .bub{flex:none;width:40px;height:40px;border-radius:50%;background:var(--red);
+    display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff;box-shadow:0 0 0 4px rgba(228,0,43,.15)}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:6px 0 6px;font-size:18px}
+  .fig{background:#000;border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .fig svg{display:block;width:100%;height:auto}
+  .cap{font-size:13px;color:var(--mut);padding:8px 12px;border-top:1px solid var(--line);background:#0b0d12}
+  .note{border-left:3px solid var(--accent);background:rgba(90,169,255,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .warnbox{border-left:3px solid var(--warn);background:rgba(255,176,32,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .okbox{border-left:3px solid var(--ok);background:rgba(46,194,106,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  kbd{background:#0b0d12;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:2px 8px;font-family:Consolas,monospace;font-size:13px;color:#fff}
+  code{background:#0b0d12;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#ffd479}
+  a{color:var(--accent)}
+  ul{padding-left:20px}
+  .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .tag{font-size:12px;color:var(--mut);font-family:Consolas,monospace}
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">MSI Click BIOS 5 · AMD AM5 · DDR5</div>
+  <h1>Activar EXPO (A-XMP) en tu MSI B850 Tomahawk</h1>
+  <p>Sube tu RAM Corsair de <b>4800 → 6000 MHz</b> · ~25&nbsp;% más ancho de banda · 5 minutos</p>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2 style="border:0;margin:0 0 10px;padding:0">🔎 Diagnóstico de TU equipo</h2>
+    <p class="lead" style="margin-top:0">Leído en vivo de tu PC antes de escribir esta guía.</p>
+    <table>
+      <tr><th>Componente</th><th>Valor detectado</th><th>Estado</th></tr>
+      <tr><td>Placa madre</td><td><b>MSI MAG B850 TOMAHAWK MAX WIFI</b> (MS-7E62)</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>BIOS</td><td>AMI ver. <b>2.A61</b> (06-jul-2026)</td><td><span class="pill ok">Actual</span></td></tr>
+      <tr><td>Memoria</td><td>2× Corsair <b>CMK48GX5M2E6000C36</b> = 48 GB (2×24)</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>Velocidad de fábrica</td><td><b>DDR5-6000 CL36</b> con perfil <b>EXPO</b></td><td><span class="pill warn">Sin activar</span></td></tr>
+      <tr><td>Velocidad actual</td><td><b>4800 MHz</b> (modo seguro JEDEC)</td><td><span class="pill warn">A mejorar</span></td></tr>
+      <tr><td>RAM visible en Windows</td><td>46.88 de 46.88 GB</td><td><span class="pill ok">Ya completa</span></td></tr>
+    </table>
+    <div class="note"><b>Lectura clara:</b> Windows <b>ya ve toda tu RAM</b> (los 48 GB), así que el <i>Memory Remap</i> no está roto. Lo que te falta es <b>velocidad</b>: tu kit es de 6000 pero está corriendo a 4800. Activar EXPO recupera esos 1200 MHz. No ganarás "más GB" — ganarás <b>rendimiento</b>.</div>
+  </div>
+
+  <div class="warnbox">
+    <b>⚠️ Antes de empezar — lee esto:</b>
+    <ul style="margin:8px 0 0">
+      <li>El <b>primer arranque</b> tras activar EXPO puede tardar 15–60 s con pantalla en negro (la placa "entrena" la memoria). <b>Es normal, no apagues a la fuerza.</b></li>
+      <li>Si el PC no arranca tras 2–3 intentos, la placa revierte sola a valores seguros (o pon el jumper/botón <b>Clear CMOS</b>). No se daña nada.</li>
+      <li>Guarda tu trabajo y cierra programas: vamos a reiniciar.</li>
+    </ul>
+  </div>
+
+  <!-- ============ PASO 1 ============ -->
+  <h2><span class="n">Paso 1.</span> Entrar a la BIOS</h2>
+  <p class="lead">Reinicia y, mientras aparece el logo MSI, toca <kbd>Supr</kbd> (Delete) varias veces.</p>
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Pulsa <kbd>Supr</kbd> / <kbd>Del</kbd> repetidamente en el logo</h3>
+      <p>Entrarás al <b>EZ Mode</b> (modo fácil) de la Click BIOS 5. Alternativa en Windows 11: <kbd>Shift</kbd> + reiniciar → <i>Solucionar problemas → Opciones avanzadas → Configuración de firmware UEFI</i>.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="300" fill="#000"/>
+          <polygon points="400,90 372,150 428,150" fill="none" stroke="#e4002b" stroke-width="6"/>
+          <circle cx="400" cy="130" r="70" fill="none" stroke="#e4002b" stroke-width="4" opacity=".5"/>
+          <text x="400" y="200" fill="#fff" font-size="30" font-weight="bold" text-anchor="middle" font-family="Segoe UI">MSI</text>
+          <text x="400" y="230" fill="#98a2b8" font-size="15" text-anchor="middle" font-family="Segoe UI">MAG B850 TOMAHAWK MAX WIFI</text>
+          <rect x="250" y="255" width="300" height="30" rx="6" fill="#161a22" stroke="#2a3142"/>
+          <text x="400" y="275" fill="#ffd479" font-size="14" text-anchor="middle" font-family="Consolas">Press  DEL  to enter SETUP</text>
+        </svg>
+        <div class="cap">Pantalla de arranque — el momento para pulsar <b>Supr/Del</b>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 2 ============ -->
+  <h2><span class="n">Paso 2.</span> Activar A-XMP / EXPO en EZ Mode (la vía rápida)</h2>
+  <p class="lead">En AMD, MSI llama al perfil <b>A-XMP</b> y al elegir el perfil verás la etiqueta <b>EXPO</b>. Está arriba a la izquierda del EZ Mode.</p>
+  <div class="step">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>Haz clic en el interruptor <b>A-XMP</b> → elige <b>Profile 1 (EXPO) · DDR5-6000</b></h3>
+      <div class="fig">
+        <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="420" fill="#0d0f14"/>
+          <!-- top bar -->
+          <rect x="0" y="0" width="800" height="46" fill="#11141b"/>
+          <polygon points="26,14 18,32 34,32" fill="#e4002b"/>
+          <text x="46" y="30" fill="#fff" font-size="16" font-weight="bold" font-family="Segoe UI">MSI</text>
+          <text x="120" y="30" fill="#98a2b8" font-size="13" font-family="Segoe UI">Click BIOS 5 — EZ Mode</text>
+          <text x="700" y="30" fill="#98a2b8" font-size="13" font-family="Consolas">2.A61</text>
+          <!-- A-XMP box highlighted -->
+          <rect x="24" y="70" width="300" height="120" rx="10" fill="#161a22" stroke="#e4002b" stroke-width="2.5"/>
+          <text x="44" y="98" fill="#ff2d4f" font-size="15" font-weight="bold" font-family="Segoe UI">A-XMP</text>
+          <text x="44" y="120" fill="#98a2b8" font-size="12" font-family="Segoe UI">Perfil de memoria (EXPO)</text>
+          <!-- toggle ON -->
+          <rect x="44" y="135" width="70" height="30" rx="15" fill="#e4002b"/>
+          <circle cx="99" cy="150" r="12" fill="#fff"/>
+          <text x="128" y="155" fill="#2ec26a" font-size="14" font-weight="bold" font-family="Segoe UI">Enabled</text>
+          <!-- profile dropdown -->
+          <rect x="44" y="172" width="256" height="0.5" fill="#2a3142"/>
+          <!-- right info -->
+          <rect x="352" y="70" width="424" height="120" rx="10" fill="#161a22" stroke="#2a3142"/>
+          <text x="372" y="98" fill="#98a2b8" font-size="13" font-family="Segoe UI">CPU</text>
+          <text x="600" y="98" fill="#fff" font-size="13" text-anchor="end" font-family="Segoe UI">AMD Ryzen (AM5)</text>
+          <text x="372" y="125" fill="#98a2b8" font-size="13" font-family="Segoe UI">Memory Size</text>
+          <text x="756" y="125" fill="#fff" font-size="13" text-anchor="end" font-family="Segoe UI">48576 MB</text>
+          <text x="372" y="152" fill="#98a2b8" font-size="13" font-family="Segoe UI">DRAM Frequency</text>
+          <text x="756" y="152" fill="#2ec26a" font-size="13" font-weight="bold" text-anchor="end" font-family="Segoe UI">6000 MHz</text>
+          <text x="372" y="179" fill="#98a2b8" font-size="13" font-family="Segoe UI">Profile</text>
+          <text x="756" y="179" fill="#ffd479" font-size="13" text-anchor="end" font-family="Segoe UI">Profile 1 · EXPO</text>
+          <!-- dropdown popover -->
+          <rect x="120" y="210" width="330" height="130" rx="8" fill="#1d2230" stroke="#e4002b"/>
+          <text x="138" y="235" fill="#98a2b8" font-size="12" font-family="Segoe UI">Selecciona perfil:</text>
+          <rect x="132" y="245" width="306" height="28" rx="5" fill="#e4002b" opacity=".9"/>
+          <text x="146" y="264" fill="#fff" font-size="13" font-weight="bold" font-family="Consolas">Profile 1  (EXPO)  DDR5-6000  36-38-38-76</text>
+          <text x="146" y="294" fill="#98a2b8" font-size="13" font-family="Consolas">Profile 2  (EXPO)  DDR5-6000  Tweaked</text>
+          <text x="146" y="322" fill="#98a2b8" font-size="13" font-family="Consolas">Disabled   (JEDEC 4800)</text>
+        </svg>
+        <div class="cap">EZ Mode: activa el interruptor <b>A-XMP</b> y elige <b>Profile 1 (EXPO)</b>. Verás <i>DRAM Frequency</i> saltar a <b>6000 MHz</b>.</div>
+      </div>
+      <div class="note">Si tu EZ Mode no muestra el recuadro A-XMP, no pasa nada: lo hacemos desde el menú avanzado en el Paso 3. Cualquiera de las dos vías sirve — <b>con una basta.</b></div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 3 ============ -->
+  <h2><span class="n">Paso 3.</span> Vía avanzada (menú OC) — equivalente</h2>
+  <p class="lead">Pulsa <kbd>F7</kbd> para pasar a <b>Advanced Mode</b> y entra a <b>OC</b>. Aquí también verificamos el <b>Memory Remap</b> (Opción 3).</p>
+  <div class="step">
+    <div class="bub">3</div>
+    <div class="body">
+      <h3>OC → <b>Extreme Memory Profile (A-XMP)</b> → <code>Enabled · Profile 1</code></h3>
+      <div class="fig">
+        <svg viewBox="0 0 800 430" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="430" fill="#0d0f14"/>
+          <rect x="0" y="0" width="800" height="42" fill="#11141b"/>
+          <polygon points="24,12 16,30 32,30" fill="#e4002b"/>
+          <text x="44" y="28" fill="#fff" font-size="15" font-weight="bold" font-family="Segoe UI">MSI</text>
+          <text x="120" y="28" fill="#98a2b8" font-size="13" font-family="Segoe UI">Advanced Mode</text>
+          <!-- left menu -->
+          <rect x="0" y="42" width="150" height="388" fill="#11141b"/>
+          <text x="20" y="80" fill="#98a2b8" font-size="14" font-family="Segoe UI">SETTINGS</text>
+          <rect x="0" y="95" width="150" height="34" fill="#e4002b"/>
+          <text x="20" y="117" fill="#fff" font-size="15" font-weight="bold" font-family="Segoe UI">OC</text>
+          <text x="20" y="158" fill="#98a2b8" font-size="14" font-family="Segoe UI">M-FLASH</text>
+          <text x="20" y="196" fill="#98a2b8" font-size="14" font-family="Segoe UI">HARDWARE MONITOR</text>
+          <!-- content rows -->
+          <text x="176" y="80" fill="#ff2d4f" font-size="13" font-weight="bold" font-family="Segoe UI">DRAM Setting</text>
+          <line x1="176" y1="90" x2="776" y2="90" stroke="#2a3142"/>
+          <!-- row: A-XMP -->
+          <rect x="166" y="100" width="620" height="34" rx="6" fill="#161a22" stroke="#e4002b" stroke-width="2"/>
+          <text x="186" y="122" fill="#fff" font-size="14" font-family="Segoe UI">Extreme Memory Profile (A-XMP)</text>
+          <text x="770" y="122" fill="#2ec26a" font-size="14" font-weight="bold" text-anchor="end" font-family="Consolas">[Enabled · Profile 1]</text>
+          <!-- row: DRAM Freq -->
+          <text x="186" y="160" fill="#e8ecf4" font-size="14" font-family="Segoe UI">DRAM Frequency</text>
+          <text x="770" y="160" fill="#ffd479" font-size="14" text-anchor="end" font-family="Consolas">[DDR5-6000]</text>
+          <!-- row: FCLK -->
+          <text x="186" y="192" fill="#e8ecf4" font-size="14" font-family="Segoe UI">FCLK Frequency</text>
+          <text x="770" y="192" fill="#98a2b8" font-size="14" text-anchor="end" font-family="Consolas">[Auto]</text>
+          <!-- section 2 -->
+          <text x="176" y="232" fill="#ff2d4f" font-size="13" font-weight="bold" font-family="Segoe UI">Advanced DRAM / Chipset</text>
+          <line x1="176" y1="242" x2="776" y2="242" stroke="#2a3142"/>
+          <!-- Memory Remap (option 3) -->
+          <rect x="166" y="252" width="620" height="34" rx="6" fill="#161a22" stroke="#5aa9ff" stroke-width="1.5"/>
+          <text x="186" y="274" fill="#fff" font-size="14" font-family="Segoe UI">Memory Mapped I/O above 4GB (Memory Remap)</text>
+          <text x="770" y="274" fill="#2ec26a" font-size="14" font-weight="bold" text-anchor="end" font-family="Consolas">[Enabled]</text>
+          <text x="186" y="312" fill="#e8ecf4" font-size="14" font-family="Segoe UI">Re-Size BAR Support</text>
+          <text x="770" y="312" fill="#98a2b8" font-size="14" text-anchor="end" font-family="Consolas">[Auto]</text>
+          <!-- help footer -->
+          <rect x="166" y="345" width="620" height="70" rx="8" fill="#11141b" stroke="#2a3142"/>
+          <text x="186" y="370" fill="#98a2b8" font-size="12" font-family="Segoe UI">Ayuda: "Memory Remap" debe estar en Enabled para que el SO</text>
+          <text x="186" y="390" fill="#98a2b8" font-size="12" font-family="Segoe UI">use toda la RAM sobre 4 GB. En tu equipo ya está activado.</text>
+        </svg>
+        <div class="cap">Menú <b>OC</b>: A-XMP en <b>Enabled · Profile 1</b> (Opción 1) y, más abajo, <b>Memory Remap = Enabled</b> (Opción 3, ya correcto en tu PC).</div>
+      </div>
+      <div class="okbox"><b>Opción 3 (Memory Remap):</b> en tu B850 con Windows 11 de 64 bits <b>ya viene activado</b> — por eso Windows ve los 48 GB completos. Solo confirma que diga <code>Enabled</code>; no necesitas cambiar nada.</div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 4 ============ -->
+  <h2><span class="n">Paso 4.</span> Guardar y reiniciar</h2>
+  <div class="step">
+    <div class="bub">4</div>
+    <div class="body">
+      <h3>Pulsa <kbd>F10</kbd> → <b>Save &amp; Exit</b> → <kbd>Enter</kbd></h3>
+      <div class="fig">
+        <svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="240" fill="#0d0f14" opacity=".4"/>
+          <rect width="800" height="240" fill="#000" opacity=".55"/>
+          <rect x="220" y="55" width="360" height="130" rx="12" fill="#161a22" stroke="#e4002b" stroke-width="2"/>
+          <text x="400" y="90" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle" font-family="Segoe UI">Save configuration and exit?</text>
+          <text x="400" y="118" fill="#98a2b8" font-size="13" text-anchor="middle" font-family="Segoe UI">Se guardarán los cambios y el equipo se reiniciará.</text>
+          <rect x="300" y="138" width="90" height="34" rx="7" fill="#e4002b"/>
+          <text x="345" y="160" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle" font-family="Segoe UI">Yes</text>
+          <rect x="410" y="138" width="90" height="34" rx="7" fill="#1d2230" stroke="#2a3142"/>
+          <text x="455" y="160" fill="#98a2b8" font-size="14" text-anchor="middle" font-family="Segoe UI">No</text>
+        </svg>
+        <div class="cap">Confirma <b>Yes</b>. Recuerda: el primer arranque puede tardar por el <i>memory training</i>. Paciencia.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 5 ============ -->
+  <h2><span class="n">Paso 5.</span> Validar que funcionó (en Windows)</h2>
+  <p class="lead">No basta con haberlo activado: <b>hay que comprobar el efecto real.</b> Dos formas, la 2ª es la fiable.</p>
+  <div class="step">
+    <div class="bub">5</div>
+    <div class="body">
+      <h3>A) Administrador de tareas <span class="tag">(rápido)</span></h3>
+      <p><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> → pestaña <b>Rendimiento</b> → <b>Memoria</b>. Debe decir <b>Velocidad: 6000 MHz</b> y <b>48.0 GB</b>.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="200" fill="#191b1f"/>
+          <text x="30" y="42" fill="#fff" font-size="17" font-weight="bold" font-family="Segoe UI">Memoria</text>
+          <text x="770" y="42" fill="#98a2b8" font-size="14" text-anchor="end" font-family="Segoe UI">48.0 GB DDR5</text>
+          <line x1="30" y1="58" x2="770" y2="58" stroke="#2a3142"/>
+          <text x="30" y="100" fill="#98a2b8" font-size="13" font-family="Segoe UI">En uso</text>
+          <text x="30" y="120" fill="#fff" font-size="15" font-family="Segoe UI">12.4 GB</text>
+          <text x="250" y="100" fill="#98a2b8" font-size="13" font-family="Segoe UI">Disponible</text>
+          <text x="250" y="120" fill="#fff" font-size="15" font-family="Segoe UI">35.6 GB</text>
+          <text x="520" y="100" fill="#98a2b8" font-size="13" font-family="Segoe UI">Velocidad</text>
+          <text x="520" y="120" fill="#2ec26a" font-size="15" font-weight="bold" font-family="Segoe UI">6000 MHz</text>
+          <text x="30" y="165" fill="#98a2b8" font-size="13" font-family="Segoe UI">Ranuras usadas</text>
+          <text x="30" y="185" fill="#fff" font-size="15" font-family="Segoe UI">2 de 4</text>
+          <text x="250" y="165" fill="#98a2b8" font-size="13" font-family="Segoe UI">Factor de forma</text>
+          <text x="250" y="185" fill="#fff" font-size="15" font-family="Segoe UI">DIMM</text>
+        </svg>
+        <div class="cap">Administrador de tareas → Rendimiento → Memoria. Busca <b>Velocidad: 6000 MHz</b>.</div>
+      </div>
+      <div class="warnbox"><b>Ojo con un detalle:</b> Windows a veces reporta <b>DDR "efectiva/2"</b>. Si ves <b>3000 MHz</b> ahí, NO es error: 3000 × 2 (DDR) = <b>DDR5-6000</b>. Está bien. Por eso conviene la comprobación B.</div>
+
+      <h3 style="margin-top:26px">B) CPU-Z <span class="tag">(la prueba definitiva)</span></h3>
+      <p>Descarga <a href="https://www.cpuid.com/softwares/cpu-z.html">CPU-Z</a> → pestaña <b>Memory</b>. En <b>DRAM Frequency</b> debe marcar <b>~3000 MHz</b> (recuerda: ×2 = 6000). Si sigue en <b>~2400 MHz</b>, EXPO NO quedó activo → vuelve al Paso 2.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 210" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="210" fill="#ece9d8"/>
+          <rect x="0" y="0" width="800" height="30" fill="#0a246a"/>
+          <text x="14" y="20" fill="#fff" font-size="13" font-weight="bold" font-family="Tahoma,Segoe UI">CPU-Z</text>
+          <rect x="12" y="40" width="70" height="22" rx="3" fill="#d4d0c8" stroke="#808080"/>
+          <text x="47" y="55" fill="#000" font-size="12" text-anchor="middle" font-family="Tahoma">Memory</text>
+          <rect x="12" y="70" width="776" height="128" fill="#f5f4ef" stroke="#808080"/>
+          <text x="30" y="98" fill="#000" font-size="13" font-family="Tahoma">Type</text>
+          <text x="230" y="98" fill="#000" font-size="13" font-family="Tahoma" font-weight="bold">DDR5</text>
+          <text x="30" y="124" fill="#000" font-size="13" font-family="Tahoma">Size</text>
+          <text x="230" y="124" fill="#000" font-size="13" font-family="Tahoma" font-weight="bold">48 GBytes  (Dual Channel)</text>
+          <text x="30" y="150" fill="#000" font-size="13" font-family="Tahoma">DRAM Frequency</text>
+          <rect x="222" y="136" width="120" height="20" fill="#fff8c4" stroke="#c9a100"/>
+          <text x="230" y="150" fill="#a00" font-size="13" font-family="Tahoma" font-weight="bold">3000.0 MHz</text>
+          <text x="360" y="150" fill="#555" font-size="12" font-family="Tahoma">( × 2 = DDR5-6000 )</text>
+          <text x="30" y="176" fill="#000" font-size="13" font-family="Tahoma">FSB:DRAM</text>
+          <text x="230" y="176" fill="#000" font-size="13" font-family="Tahoma">1:48</text>
+        </svg>
+        <div class="cap">CPU-Z → Memory. <b>DRAM Frequency ≈ 3000 MHz</b> confirma que corres a DDR5-6000. ✅</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="okbox" style="margin-top:36px">
+    <b>✅ Resumen de tu caso</b>
+    <ul style="margin:8px 0 0">
+      <li><b>Opción 1 (EXPO/A-XMP):</b> este es tu cambio real — de 4800 a <b>6000 MHz</b>. Pasos 2–4.</li>
+      <li><b>Opción 3 (Memory Remap):</b> solo verificación; <b>ya está activado</b> y Windows ya usa tus 48 GB.</li>
+      <li>Ambas conviven sin conflicto. Ninguna borra datos ni daña el hardware.</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <b>Fuentes oficiales / de referencia</b> (por si quieres ver fotos reales de la BIOS):
+    <ul>
+      <li><a href="https://www.msi.com/blog/how-to-speed-up-your-ram-with-overclocking-the-ultimate-guide-to-enabling-xmp-and-expo">MSI — How to enable XMP and EXPO (blog oficial)</a></li>
+      <li><a href="https://www.gskill.com/community/1584933243/1646893264/How-to-Enable-XMP-EXPO-for-DDR4-DDR5">G.SKILL — How to Enable XMP/EXPO (DDR4 &amp; DDR5)</a></li>
+      <li><a href="https://help.maingear.com/article/192-extreme-memory-profile-xmp-expo">MAINGEAR — Enable/Disable XMP &amp; EXPO (MSI, ASUS, ASRock)</a></li>
+    </ul>
+    <p>Las ilustraciones de esta guía son recreaciones fieles de la interfaz MSI Click BIOS 5, no capturas de terceros. Generado para <b>MSI MAG B850 TOMAHAWK MAX WIFI</b> · BIOS 2.A61 · 13-ago-2026.</p>
+  </div>
+
+</div>
+</body>
+</html>
