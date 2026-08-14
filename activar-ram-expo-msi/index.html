@@ -68,8 +68,10 @@
     .card{padding:15px 15px}
     table{font-size:13px}
     th,td{padding:8px 8px}
-    .step{gap:12px;margin:18px 0}
-    .step .bub{width:32px;height:32px;font-size:15px}
+    /* en movil el paso NO va como vineta: numero arriba, texto a ancho completo */
+    .step{display:block;margin:22px 0}
+    .step .bub{width:30px;height:30px;font-size:14px;margin:0 0 10px 0}
+    .step .body{width:100%}
     .step h3{font-size:16px}
     /* las ilustraciones no se aplastan: se pueden deslizar y hacer zoom */
     .fig{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
