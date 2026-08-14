@@ -48,6 +48,36 @@
   ul{padding-left:20px}
   .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
   .tag{font-size:12px;color:var(--mut);font-family:Consolas,monospace}
+
+  /* ====== Responsivo: iPhone 15 Pro Max / iPad ====== */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  .card,.note,.warnbox,.okbox,.step .body{overflow-wrap:break-word;word-break:break-word}
+  .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  @media (max-width:640px){
+    header{padding:38px 16px 26px}
+    header h1{font-size:22px}
+    header p{font-size:14px}
+    header .kick{font-size:11px;letter-spacing:1.5px}
+    .wrap{padding:0 14px 60px}
+    h2{font-size:19px;margin:34px 0 4px}
+    .lead{font-size:14px;margin-bottom:16px}
+    .card{padding:15px 15px}
+    table{font-size:13px}
+    th,td{padding:8px 8px}
+    .step{gap:12px;margin:18px 0}
+    .step .bub{width:32px;height:32px;font-size:15px}
+    .step h3{font-size:16px}
+    /* las ilustraciones no se aplastan: se pueden deslizar y hacer zoom */
+    .fig{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .fig svg{min-width:600px}
+    .cap{font-size:12px;padding:7px 10px}
+    kbd{padding:1px 6px;font-size:12px}
+    code{font-size:12px}
+    .foot{font-size:12px}
+  }
 </style>
 </head>
 <body>
