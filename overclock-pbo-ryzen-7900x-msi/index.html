@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subir el rendimiento de tu Ryzen 9 7900X con PBO + Curve Optimizer — MSI B850 Tomahawk</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d2230; --line:#2a3142;
+    --red:#e4002b; --red2:#ff2d4f; --txt:#e8ecf4; --mut:#98a2b8;
+    --ok:#2ec26a; --warn:#ffb020; --accent:#5aa9ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0a0c11,#0d0f14 300px);color:var(--txt);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 20px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(600px 200px at 50% -40px,rgba(228,0,43,.18),transparent)}
+  header .kick{color:var(--red2);font-weight:700;letter-spacing:2px;font-size:13px;text-transform:uppercase}
+  header h1{font-size:34px;margin:10px 0 6px;line-height:1.2}
+  header p{color:var(--mut);margin:0;font-size:16px}
+  h2{font-size:24px;margin:48px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--red2);font-variant-numeric:tabular-nums}
+  .lead{color:var(--mut);margin:4px 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td b{color:#fff}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(46,194,106,.15);color:var(--ok)}
+  .pill.warn{background:rgba(255,176,32,.15);color:var(--warn)}
+  .pill.info{background:rgba(90,169,255,.15);color:var(--accent)}
+  .step{display:flex;gap:18px;margin:22px 0;align-items:flex-start}
+  .step .bub{flex:none;width:40px;height:40px;border-radius:50%;background:var(--red);
+    display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff;box-shadow:0 0 0 4px rgba(228,0,43,.15)}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:6px 0 6px;font-size:18px}
+  .fig{background:#000;border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .fig svg{display:block;width:100%;height:auto}
+  .cap{font-size:13px;color:var(--mut);padding:8px 12px;border-top:1px solid var(--line);background:#0b0d12}
+  .note{border-left:3px solid var(--accent);background:rgba(90,169,255,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .warnbox{border-left:3px solid var(--warn);background:rgba(255,176,32,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .okbox{border-left:3px solid var(--ok);background:rgba(46,194,106,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .badbox{border-left:3px solid var(--red2);background:rgba(228,0,43,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  kbd{background:#0b0d12;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:2px 8px;font-family:Consolas,monospace;font-size:13px;color:#fff}
+  code{background:#0b0d12;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#ffd479}
+  a{color:var(--accent)}
+  ul{padding-left:20px}
+  .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .tag{font-size:12px;color:var(--mut);font-family:Consolas,monospace}
+
+  /* ====== Responsivo: iPhone 15 Pro Max / iPad ====== */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  .card,.note,.warnbox,.okbox,.badbox,.step .body{overflow-wrap:break-word}
+  .pill{white-space:nowrap}
+  th{white-space:nowrap}
+
+  @media (max-width:640px){
+    header{padding:38px 16px 26px}
+    header h1{font-size:22px}
+    header p{font-size:14px}
+    header .kick{font-size:11px;letter-spacing:1.5px}
+    .wrap{padding:0 14px 60px}
+    h2{font-size:19px;margin:34px 0 4px}
+    .lead{font-size:14px;margin-bottom:16px}
+    .card{padding:15px 15px}
+    table{font-size:13px}
+    th,td{padding:8px 8px}
+    /* en movil el paso NO va como vineta: numero arriba, texto a ancho completo */
+    .step{display:block;margin:22px 0}
+    .step .bub{width:30px;height:30px;font-size:14px;margin:0 0 10px 0}
+    .step .body{width:100%}
+    .step h3{font-size:16px}
+    /* las ilustraciones no se aplastan: se pueden deslizar y hacer zoom */
+    .fig{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .fig svg{min-width:600px}
+    .cap{font-size:12px;padding:7px 10px}
+    kbd{padding:1px 6px;font-size:12px}
+    code{font-size:12px}
+    .foot{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">MSI Click BIOS 5 · AMD AM5 · Zen 4</div>
+  <h1>Sube el rendimiento de tu Ryzen 9 7900X</h1>
+  <p>El método correcto: <b>PBO + Curve Optimizer</b> · más velocidad sostenida <b>y</b> menos calor · sin overclock manual</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ POR QUÉ ============ -->
+  <div class="card">
+    <h2 style="border:0;margin:0 0 10px;padding:0">🧠 Antes de tocar nada: por qué NO harás overclock "a la antigua"</h2>
+    <p class="lead" style="margin-top:0">Esto es lo que casi nadie te explica y te ahorra perder rendimiento.</p>
+    <p>En tu Ryzen 9 7900X, fijar una frecuencia manual (tipo "todos los núcleos a 5.2&nbsp;GHz") normalmente te da <b>MENOS</b> rendimiento, no más. ¿Por qué? Porque de fábrica el chip ya sube solo hasta <b>5.6&nbsp;GHz</b> cuando lo necesita (Precision Boost 2). Al fijarlo a mano lo dejas amarrado a una frecuencia más baja en las tareas ligeras.</p>
+    <p>El método moderno y correcto para Zen 4 tiene dos partes que trabajan juntas:</p>
+    <table>
+      <tr><th>Ajuste</th><th>Qué hace</th><th>Resultado</th></tr>
+      <tr><td><b>PBO</b><br><span class="tag">Precision Boost Overdrive</span></td><td>Le da al CPU más margen de energía y temperatura para que <b>él solo</b> boostee más alto y lo sostenga más tiempo.</td><td><span class="pill ok">+ velocidad sostenida</span></td></tr>
+      <tr><td><b>Curve Optimizer</b><br><span class="tag">Undervolt por núcleo</span></td><td>Baja un poco el voltaje de cada núcleo. Menos voltaje = menos calor = <b>boostea aún más alto</b>.</td><td><span class="pill ok">+ velocidad · − calor</span></td></tr>
+    </table>
+    <div class="okbox"><b>La idea en una frase:</b> no subes una frecuencia fija — le quitas los frenos al chip y lo enfrías por dentro para que él mismo llegue más lejos. Con tu enfriamiento líquido de 360&nbsp;mm tienes justo el margen para aprovecharlo.</div>
+  </div>
+
+  <!-- ============ DIAGNÓSTICO ============ -->
+  <div class="card">
+    <h2 style="border:0;margin:0 0 10px;padding:0">🔎 Diagnóstico de TU equipo</h2>
+    <p class="lead" style="margin-top:0">Leído en vivo de tu PC antes de escribir esta guía.</p>
+    <table>
+      <tr><th>Componente</th><th>Valor detectado</th><th>Estado</th></tr>
+      <tr><td>Procesador</td><td><b>AMD Ryzen 9 7900X</b> · 12 núcleos / 24 hilos · Zen 4 (AM5)</td><td><span class="pill ok">OK para PBO</span></td></tr>
+      <tr><td>Placa madre</td><td><b>MSI MAG B850 TOMAHAWK MAX WIFI</b> (MS-7E62)</td><td><span class="pill ok">Soporta PBO</span></td></tr>
+      <tr><td>BIOS</td><td>AMI ver. <b>2.A61</b> (06-jul-2026)</td><td><span class="pill ok">Actual</span></td></tr>
+      <tr><td>Enfriamiento</td><td><b>DeepCool LE360 V2</b> — líquido AIO 360&nbsp;mm</td><td><span class="pill ok">Ideal</span></td></tr>
+      <tr><td>Fuente</td><td><b>DeepCool PX1200G</b> — 1200&nbsp;W · 80+ Gold</td><td><span class="pill ok">De sobra</span></td></tr>
+      <tr><td>RAM (EXPO)</td><td><b>DDR5-6000</b> ya activo (6000&nbsp;MHz)</td><td><span class="pill ok">Hecho</span></td></tr>
+    </table>
+    <div class="note"><b>Lectura clara:</b> tienes el mejor escenario para PBO — buen cooler, fuente con margen enorme y la RAM ya optimizada. Este tutorial es el <b>siguiente escalón gratis</b> de rendimiento después del EXPO.</div>
+  </div>
+
+  <!-- ============ ADVERTENCIAS ============ -->
+  <div class="warnbox">
+    <b>⚠️ Antes de empezar — lee esto:</b>
+    <ul style="margin:8px 0 0">
+      <li><b>Temperatura:</b> el 7900X está <b>diseñado para llegar a 95&nbsp;°C</b> y ahí regula solo. Ver 95&nbsp;°C con PBO es <b>NORMAL</b>, no es falla ni peligro. No te asustes.</li>
+      <li><b>Garantía:</b> AMD considera que PBO "anula" la garantía del CPU (letra chica). En la práctica lo usa muchísima gente sin problema, pero que lo sepas.</li>
+      <li><b>Estabilidad:</b> el undervolt (Curve Optimizer) demasiado agresivo puede causar cierres o pantallazos, sobre todo en reposo. Por eso vamos <b>conservadores</b> y probamos.</li>
+      <li>Si el PC no arranca tras 2–3 intentos, la placa revierte sola a valores seguros (o usa <b>Clear CMOS</b>). No se daña nada.</li>
+    </ul>
+  </div>
+
+  <!-- ============ PASO 1 ============ -->
+  <h2><span class="n">Paso 1.</span> Entrar a la BIOS en Advanced Mode</h2>
+  <p class="lead">Reinicia y, mientras aparece el logo MSI, toca <kbd>Supr</kbd> (Delete) varias veces. Ya dentro, pulsa <kbd>F7</kbd> para pasar a <b>Advanced Mode</b>.</p>
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Pulsa <kbd>Supr</kbd> en el logo → luego <kbd>F7</kbd> → entra a <b>OC</b></h3>
+      <p>Alternativa en Windows 11: <kbd>Shift</kbd> + reiniciar → <i>Solucionar problemas → Opciones avanzadas → Configuración de firmware UEFI</i>.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="300" fill="#000"/>
+          <polygon points="400,90 372,150 428,150" fill="none" stroke="#e4002b" stroke-width="6"/>
+          <circle cx="400" cy="130" r="70" fill="none" stroke="#e4002b" stroke-width="4" opacity=".5"/>
+          <text x="400" y="200" fill="#fff" font-size="30" font-weight="bold" text-anchor="middle" font-family="Segoe UI">MSI</text>
+          <text x="400" y="230" fill="#98a2b8" font-size="15" text-anchor="middle" font-family="Segoe UI">MAG B850 TOMAHAWK MAX WIFI</text>
+          <rect x="250" y="255" width="300" height="30" rx="6" fill="#161a22" stroke="#2a3142"/>
+          <text x="400" y="275" fill="#ffd479" font-size="14" text-anchor="middle" font-family="Consolas">Press  DEL  to enter SETUP</text>
+        </svg>
+        <div class="cap">Pantalla de arranque — el momento para pulsar <b>Supr/Del</b>. Dentro de la BIOS, <kbd>F7</kbd> cambia entre EZ Mode y Advanced Mode.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 2 ============ -->
+  <h2><span class="n">Paso 2.</span> Activar PBO (Precision Boost Overdrive)</h2>
+  <p class="lead">En <b>OC</b>, baja hasta <b>CPU Features</b> (o <i>AMD Overclocking</i>) y busca <b>Precision Boost Overdrive</b>.</p>
+  <div class="step">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>OC → CPU Features → <b>Precision Boost Overdrive</b> → <code>Advanced</code></h3>
+      <p>Al ponerlo en <b>Advanced</b> se despliegan más opciones. Configúralas así:</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 440" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="440" fill="#0d0f14"/>
+          <rect x="0" y="0" width="800" height="42" fill="#11141b"/>
+          <polygon points="24,12 16,30 32,30" fill="#e4002b"/>
+          <text x="44" y="28" fill="#fff" font-size="15" font-weight="bold" font-family="Segoe UI">MSI</text>
+          <text x="120" y="28" fill="#98a2b8" font-size="13" font-family="Segoe UI">Advanced Mode › OC › CPU Features</text>
+          <text x="700" y="28" fill="#98a2b8" font-size="13" font-family="Consolas">2.A61</text>
+          <!-- left menu -->
+          <rect x="0" y="42" width="150" height="398" fill="#11141b"/>
+          <rect x="0" y="95" width="150" height="34" fill="#e4002b"/>
+          <text x="20" y="117" fill="#fff" font-size="15" font-weight="bold" font-family="Segoe UI">OC</text>
+          <text x="20" y="158" fill="#98a2b8" font-size="14" font-family="Segoe UI">M-FLASH</text>
+          <text x="20" y="196" fill="#98a2b8" font-size="14" font-family="Segoe UI">HARDWARE MON.</text>
+          <!-- header -->
+          <text x="176" y="80" fill="#ff2d4f" font-size="13" font-weight="bold" font-family="Segoe UI">Precision Boost Overdrive</text>
+          <line x1="176" y1="90" x2="776" y2="90" stroke="#2a3142"/>
+          <!-- row PBO -->
+          <rect x="166" y="100" width="620" height="32" rx="6" fill="#161a22" stroke="#e4002b" stroke-width="2"/>
+          <text x="186" y="121" fill="#fff" font-size="14" font-family="Segoe UI">Precision Boost Overdrive</text>
+          <text x="770" y="121" fill="#2ec26a" font-size="14" font-weight="bold" text-anchor="end" font-family="Consolas">[Advanced]</text>
+          <!-- row PBO Limits -->
+          <rect x="166" y="140" width="620" height="32" rx="6" fill="#161a22" stroke="#2a3142"/>
+          <text x="186" y="161" fill="#e8ecf4" font-size="14" font-family="Segoe UI">PBO Limits</text>
+          <text x="770" y="161" fill="#ffd479" font-size="14" text-anchor="end" font-family="Consolas">[Motherboard]</text>
+          <!-- row Scalar -->
+          <rect x="166" y="180" width="620" height="32" rx="6" fill="#161a22" stroke="#2a3142"/>
+          <text x="186" y="201" fill="#e8ecf4" font-size="14" font-family="Segoe UI">PBO Scalar</text>
+          <text x="770" y="201" fill="#98a2b8" font-size="14" text-anchor="end" font-family="Consolas">[Auto  ó  10X]</text>
+          <!-- row Max Boost Override -->
+          <rect x="166" y="220" width="620" height="32" rx="6" fill="#161a22" stroke="#5aa9ff" stroke-width="1.5"/>
+          <text x="186" y="241" fill="#fff" font-size="14" font-family="Segoe UI">Max CPU Boost Clock Override</text>
+          <text x="770" y="241" fill="#5aa9ff" font-size="14" font-weight="bold" text-anchor="end" font-family="Consolas">[+100 MHz]</text>
+          <!-- row Curve Optimizer -->
+          <rect x="166" y="260" width="620" height="32" rx="6" fill="#161a22" stroke="#2a3142"/>
+          <text x="186" y="281" fill="#e8ecf4" font-size="14" font-family="Segoe UI">Curve Optimizer</text>
+          <text x="770" y="281" fill="#98a2b8" font-size="14" text-anchor="end" font-family="Consolas">→ (Paso 3)</text>
+          <!-- help -->
+          <rect x="166" y="305" width="620" height="120" rx="8" fill="#11141b" stroke="#2a3142"/>
+          <text x="186" y="330" fill="#98a2b8" font-size="12" font-family="Segoe UI">• PBO Limits = Motherboard: usa los límites de energía de la placa (más margen).</text>
+          <text x="186" y="352" fill="#98a2b8" font-size="12" font-family="Segoe UI">• Max Boost Override = +100 MHz: intenta subir el techo de boost 100 MHz.</text>
+          <text x="186" y="374" fill="#98a2b8" font-size="12" font-family="Segoe UI">  (Empieza en +100; si es estable, luego puedes probar +150 o +200.)</text>
+          <text x="186" y="396" fill="#98a2b8" font-size="12" font-family="Segoe UI">• PBO Scalar: déjalo en Auto. 10X sube un pelín el voltaje sostenido.</text>
+          <text x="186" y="416" fill="#ffd479" font-size="12" font-family="Segoe UI">NO subas nada más aquí. El resto en Auto.</text>
+        </svg>
+        <div class="cap">Menú <b>Precision Boost Overdrive</b>. Los valores recomendados para empezar seguro con tu 7900X + AIO 360.</div>
+      </div>
+      <div class="note"><b>Resumen del Paso 2:</b> <code>PBO = Advanced</code>, <code>PBO Limits = Motherboard</code>, <code>Max CPU Boost Clock Override = +100 MHz</code>. Lo demás en <code>Auto</code>. Ahora el undervolt, que es lo que más rinde.</div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 3 ============ -->
+  <h2><span class="n">Paso 3.</span> Curve Optimizer (el undervolt — aquí está la magia)</h2>
+  <p class="lead">Es el ajuste que baja el voltaje de los núcleos para que boosteen más alto y más frescos. Vamos <b>conservadores</b> primero.</p>
+  <div class="step">
+    <div class="bub">3</div>
+    <div class="body">
+      <h3>Curve Optimizer → <code>All Core</code> · Signo <code>Negative</code> · Valor <code>15</code></h3>
+      <div class="fig">
+        <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="360" fill="#0d0f14"/>
+          <rect x="0" y="0" width="800" height="42" fill="#11141b"/>
+          <polygon points="24,12 16,30 32,30" fill="#e4002b"/>
+          <text x="44" y="28" fill="#fff" font-size="15" font-weight="bold" font-family="Segoe UI">MSI</text>
+          <text x="120" y="28" fill="#98a2b8" font-size="13" font-family="Segoe UI">OC › CPU Features › Curve Optimizer</text>
+          <!-- rows -->
+          <text x="176" y="80" fill="#ff2d4f" font-size="13" font-weight="bold" font-family="Segoe UI">Curve Optimizer</text>
+          <line x1="176" y1="90" x2="776" y2="90" stroke="#2a3142"/>
+          <rect x="166" y="100" width="620" height="34" rx="6" fill="#161a22" stroke="#e4002b" stroke-width="2"/>
+          <text x="186" y="122" fill="#fff" font-size="14" font-family="Segoe UI">Curve Optimizer</text>
+          <text x="770" y="122" fill="#2ec26a" font-size="14" font-weight="bold" text-anchor="end" font-family="Consolas">[All Core]</text>
+          <rect x="166" y="142" width="620" height="34" rx="6" fill="#161a22" stroke="#5aa9ff" stroke-width="1.5"/>
+          <text x="186" y="164" fill="#fff" font-size="14" font-family="Segoe UI">All Core Curve Optimizer Sign</text>
+          <text x="770" y="164" fill="#5aa9ff" font-size="14" font-weight="bold" text-anchor="end" font-family="Consolas">[Negative]</text>
+          <rect x="166" y="184" width="620" height="34" rx="6" fill="#161a22" stroke="#5aa9ff" stroke-width="1.5"/>
+          <text x="186" y="206" fill="#fff" font-size="14" font-family="Segoe UI">All Core Curve Optimizer Magnitude</text>
+          <text x="770" y="206" fill="#5aa9ff" font-size="14" font-weight="bold" text-anchor="end" font-family="Consolas">[15]</text>
+          <!-- help -->
+          <rect x="166" y="230" width="620" height="112" rx="8" fill="#11141b" stroke="#2a3142"/>
+          <text x="186" y="256" fill="#98a2b8" font-size="12" font-family="Segoe UI">"Negative" = bajar voltaje (undervolt). "15" = 15 pasos de bajada.</text>
+          <text x="186" y="278" fill="#98a2b8" font-size="12" font-family="Segoe UI">Empieza en 15 (seguro). Si aguanta estable, puedes probar 20, luego 25.</text>
+          <text x="186" y="300" fill="#98a2b8" font-size="12" font-family="Segoe UI">La mayoría de 7900X aguanta entre −15 y −30 en All Core.</text>
+          <text x="186" y="322" fill="#ffb020" font-size="12" font-family="Segoe UI">Si luego hay cierres/pantallazos en reposo: baja el número (menos undervolt).</text>
+        </svg>
+        <div class="cap">Curve Optimizer: <b>All Core · Negative · 15</b>. Es el punto de partida seguro; se afina subiendo el número con pruebas.</div>
+      </div>
+      <div class="warnbox"><b>Regla de oro del undervolt:</b> el fallo típico de un Curve demasiado agresivo es un <b>cierre inesperado estando el PC casi ocioso</b> (no bajo carga). Si te pasa, no es que "se dañó" — solo baja el número 3–5 pasos y listo.</div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 4 ============ -->
+  <h2><span class="n">Paso 4.</span> Guardar y reiniciar</h2>
+  <div class="step">
+    <div class="bub">4</div>
+    <div class="body">
+      <h3>Pulsa <kbd>F10</kbd> → <b>Save &amp; Exit</b> → <kbd>Enter</kbd></h3>
+      <div class="fig">
+        <svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="240" fill="#0d0f14" opacity=".4"/>
+          <rect width="800" height="240" fill="#000" opacity=".55"/>
+          <rect x="220" y="55" width="360" height="130" rx="12" fill="#161a22" stroke="#e4002b" stroke-width="2"/>
+          <text x="400" y="90" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle" font-family="Segoe UI">Save configuration and exit?</text>
+          <text x="400" y="118" fill="#98a2b8" font-size="13" text-anchor="middle" font-family="Segoe UI">Se guardarán los cambios y el equipo se reiniciará.</text>
+          <rect x="300" y="138" width="90" height="34" rx="7" fill="#e4002b"/>
+          <text x="345" y="160" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle" font-family="Segoe UI">Yes</text>
+          <rect x="410" y="138" width="90" height="34" rx="7" fill="#1d2230" stroke="#2a3142"/>
+          <text x="455" y="160" fill="#98a2b8" font-size="14" text-anchor="middle" font-family="Segoe UI">No</text>
+        </svg>
+        <div class="cap">Confirma <b>Yes</b>. Windows arrancará normal; los cambios ya están activos.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 5 ============ -->
+  <h2><span class="n">Paso 5.</span> Validar y probar estabilidad (en Windows)</h2>
+  <p class="lead">No basta con activarlo: hay que <b>comprobar el efecto real</b> y que sea estable. Dos herramientas gratis.</p>
+  <div class="step">
+    <div class="bub">5</div>
+    <div class="body">
+      <h3>A) HWiNFO64 <span class="tag">(ver frecuencias y temperatura)</span></h3>
+      <p>Descarga <a href="https://www.hwinfo.com/download/">HWiNFO64</a> → modo <i>Sensors</i>. Busca:</p>
+      <ul>
+        <li><b>Core Clocks:</b> deben verse picos por encima de <b>5.6&nbsp;GHz</b> en núcleos con carga ligera.</li>
+        <li><b>CPU (Tctl/Tdie):</b> bajo carga total llega a <b>~95&nbsp;°C</b> — normal en el 7900X.</li>
+        <li><b>Core VIDs:</b> deberían ser un poco más bajos que antes (efecto del undervolt).</li>
+      </ul>
+      <div class="fig">
+        <svg viewBox="0 0 800 210" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="210" fill="#191b1f"/>
+          <text x="30" y="40" fill="#fff" font-size="16" font-weight="bold" font-family="Segoe UI">HWiNFO64 — Sensors</text>
+          <line x1="30" y1="52" x2="770" y2="52" stroke="#2a3142"/>
+          <text x="30" y="82" fill="#98a2b8" font-size="13" font-family="Consolas">Core 0 Clock</text>
+          <text x="770" y="82" fill="#2ec26a" font-size="13" font-weight="bold" text-anchor="end" font-family="Consolas">5725 MHz</text>
+          <text x="30" y="108" fill="#98a2b8" font-size="13" font-family="Consolas">Core 3 Clock</text>
+          <text x="770" y="108" fill="#2ec26a" font-size="13" font-weight="bold" text-anchor="end" font-family="Consolas">5650 MHz</text>
+          <text x="30" y="134" fill="#98a2b8" font-size="13" font-family="Consolas">CPU (Tctl/Tdie)</text>
+          <text x="770" y="134" fill="#ffb020" font-size="13" font-weight="bold" text-anchor="end" font-family="Consolas">94.9 °C  (normal)</text>
+          <text x="30" y="160" fill="#98a2b8" font-size="13" font-family="Consolas">CPU Package Power</text>
+          <text x="770" y="160" fill="#fff" font-size="13" text-anchor="end" font-family="Consolas">205 W</text>
+          <text x="30" y="186" fill="#98a2b8" font-size="13" font-family="Consolas">Core 0 VID</text>
+          <text x="770" y="186" fill="#5aa9ff" font-size="13" text-anchor="end" font-family="Consolas">1.28 V ↓</text>
+        </svg>
+        <div class="cap">HWiNFO64 → Sensors. Picos &gt;5.6&nbsp;GHz y ~95&nbsp;°C bajo carga = PBO funcionando. El VID más bajo = el undervolt aplicando.</div>
+      </div>
+
+      <h3 style="margin-top:26px">B) Prueba de estabilidad <span class="tag">(imprescindible)</span></h3>
+      <p>Un undervolt puede parecer bien y fallar horas después. Haz estas dos pruebas:</p>
+      <ul>
+        <li><b>Carga pesada:</b> <a href="https://www.techpowerup.com/download/ocbase-prime95/">Prime95</a> (Small FFTs) o <a href="https://www.cinebench.com/">Cinebench R23</a> en bucle 20–30&nbsp;min. Si se cierra o da error → baja el Curve 3–5 pasos.</li>
+        <li><b>Reposo / carga ligera:</b> deja el PC encendido navegando un rato. El fallo del undervolt suele salir <b>aquí</b>, no bajo carga. Si hay pantallazo azul en idle → baja el Curve.</li>
+      </ul>
+      <div class="okbox"><b>Si aguanta ambas pruebas:</b> ya quedó. Puedes dejarlo así (seguro) o, si quieres exprimir más, vuelve a la BIOS y sube el Curve de 15 a 20, o el Max Boost de +100 a +150, y vuelve a probar. Un paso a la vez.</div>
+    </div>
+  </div>
+
+  <!-- ============ SI ALGO SALE MAL ============ -->
+  <h2><span class="n">SOS.</span> Si algo sale mal (sin drama)</h2>
+  <div class="step">
+    <div class="bub">!</div>
+    <div class="body">
+      <h3>Revertir todo es fácil</h3>
+      <ul>
+        <li><b>El PC no arranca:</b> tras 2–3 intentos fallidos la placa revierte sola. Si no, apaga, usa el botón/jumper <b>Clear CMOS</b> de la placa (o quita la pila 1 min). Vuelve a valores de fábrica sin dañar nada.</li>
+        <li><b>Cierres al azar:</b> entra a la BIOS y baja el número del Curve Optimizer (de 15 a 10, por ejemplo). Es casi siempre eso.</li>
+        <li><b>Quiero quitar todo:</b> en OC → Precision Boost Overdrive ponlo en <code>Disabled</code> o <code>Auto</code>, y Curve Optimizer en <code>Disabled</code>. Vuelves al estado de fábrica.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============ RESUMEN ============ -->
+  <div class="okbox" style="margin-top:36px">
+    <b>✅ Resumen de tu caso</b>
+    <ul style="margin:8px 0 0">
+      <li><b>PBO = Advanced</b>, <b>PBO Limits = Motherboard</b>, <b>Max Boost = +100 MHz</b>.</li>
+      <li><b>Curve Optimizer = All Core · Negative · 15</b> (súbelo con pruebas si quieres más).</li>
+      <li>Valida con <b>HWiNFO64</b> y prueba estabilidad con <b>Cinebench/Prime95</b> + uso normal.</li>
+      <li><b>95&nbsp;°C bajo carga es normal</b> en el 7900X. Reversible en cualquier momento.</li>
+      <li>Tu RAM (EXPO/6000) ya está — este es el escalón que sigue después de eso.</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <b>Fuentes oficiales / de referencia</b> (por si quieres ver fotos reales de la BIOS y explicaciones a fondo):
+    <ul>
+      <li><a href="https://www.amd.com/en/products/processors/technologies/precision-boost-overdrive.html">AMD — Precision Boost Overdrive (oficial)</a></li>
+      <li><a href="https://www.msi.com/blog/amd-precision-boost-overdrive-pbo-guide">MSI — Guía de PBO en placas AMD</a></li>
+      <li><a href="https://www.hwinfo.com/download/">HWiNFO64 — monitor de sensores (gratis)</a></li>
+    </ul>
+    <p>Las ilustraciones de esta guía son recreaciones fieles de la interfaz MSI Click BIOS 5, no capturas de terceros. Generado para <b>AMD Ryzen 9 7900X</b> + <b>MSI MAG B850 TOMAHAWK MAX WIFI</b> · BIOS 2.A61 · 20-ago-2026.</p>
+  </div>
+
+</div>
+</body>
+</html>
