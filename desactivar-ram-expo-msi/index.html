@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desactivar EXPO (A-XMP) en tu MSI B850 Tomahawk — prueba de estabilidad de RAM</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d2230; --line:#2a3142;
+    --y:#e2e600; --y2:#f2f24d; --ydim:#8a8b00; --txt:#e8ecf4; --mut:#98a2b8;
+    --ok:#2ec26a; --warn:#ffb020; --accent:#5aa9ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0a0c11,#0d0f14 300px);color:var(--txt);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 20px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(600px 200px at 50% -40px,rgba(226,230,0,.16),transparent)}
+  header .kick{color:var(--y);font-weight:700;letter-spacing:2px;font-size:13px;text-transform:uppercase}
+  header h1{font-size:34px;margin:10px 0 6px;line-height:1.2}
+  header p{color:var(--mut);margin:0;font-size:16px}
+  h2{font-size:24px;margin:48px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--y);font-variant-numeric:tabular-nums}
+  .lead{color:var(--mut);margin:4px 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td b{color:#fff}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(46,194,106,.15);color:var(--ok)}
+  .pill.warn{background:rgba(255,176,32,.15);color:var(--warn)}
+  .pill.bad{background:rgba(228,0,43,.15);color:#ff5a72}
+  .step{display:flex;gap:18px;margin:22px 0;align-items:flex-start}
+  .step .bub{flex:none;width:40px;height:40px;border-radius:50%;background:#14161b;border:2px solid var(--y);
+    display:grid;place-items:center;font-weight:800;font-size:18px;color:var(--y);box-shadow:0 0 0 4px rgba(226,230,0,.14)}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:6px 0 6px;font-size:18px}
+  .fig{background:#000;border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .fig svg{display:block;width:100%;height:auto}
+  .cap{font-size:13px;color:var(--mut);padding:8px 12px;border-top:1px solid var(--line);background:#0b0d12}
+  .note{border-left:3px solid var(--accent);background:rgba(90,169,255,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .warnbox{border-left:3px solid var(--warn);background:rgba(255,176,32,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .okbox{border-left:3px solid var(--ok);background:rgba(46,194,106,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .badbox{border-left:3px solid #e4002b;background:rgba(228,0,43,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  kbd{background:#0b0d12;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:2px 8px;font-family:Consolas,monospace;font-size:13px;color:#fff}
+  code{background:#0b0d12;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#ffe066}
+  a{color:var(--accent)}
+  ul{padding-left:20px}
+  .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .tag{font-size:12px;color:var(--mut);font-family:Consolas,monospace}
+
+  /* ====== Responsivo: iPhone 15 Pro Max / iPad ====== */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  .card,.note,.warnbox,.okbox,.badbox,.step .body{overflow-wrap:break-word}
+  .pill{white-space:nowrap}
+  th{white-space:nowrap}
+
+  @media (max-width:640px){
+    header{padding:38px 16px 26px}
+    header h1{font-size:22px}
+    header p{font-size:14px}
+    header .kick{font-size:11px;letter-spacing:1.5px}
+    .wrap{padding:0 14px 60px}
+    h2{font-size:19px;margin:34px 0 4px}
+    .lead{font-size:14px;margin-bottom:16px}
+    .card{padding:15px 15px}
+    table{font-size:13px}
+    th,td{padding:8px 8px}
+    .step{display:block;margin:22px 0}
+    .step .bub{width:30px;height:30px;font-size:14px;margin:0 0 10px 0}
+    .step .body{width:100%}
+    .step h3{font-size:16px}
+    .fig{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .fig svg{min-width:640px}
+    .cap{font-size:12px;padding:7px 10px}
+    kbd{padding:1px 6px;font-size:12px}
+    code{font-size:12px}
+    .foot{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">MSI Click BIOS X · MAG Arsenal Gaming · AMD AM5</div>
+  <h1>Desactivar EXPO (A-XMP) en tu MSI B850 Tomahawk</h1>
+  <p>Baja tu RAM de <b>6000 → 4800 MHz</b> como prueba de estabilidad · 5 minutos</p>
+</header>
+
+<div class="wrap">
+
+  <div class="badbox">
+    <b>🚨 Por qué hacer esto — diagnóstico del 28-ago-2026</b>
+    <p style="margin:8px 0 0">La PC se reinició <b>dos veces el mismo día</b> mientras transcribía un video con la GPU:</p>
+    <ul style="margin:8px 0 0">
+      <li><b>14:49</b> → BSOD <code>0x3D</code> (excepción de CPU no manejada).</li>
+      <li><b>16:24</b> → BSOD <code>0x4E PFN_LIST_CORRUPT</code> — confirmado con WinDbg: la lista de páginas de memoria del <b>kernel</b> se corrompió durante una lectura de disco normal. El stack <b>no menciona el driver de la GPU (nvlddmkm) en ningún punto</b> — es distinto a los BSOD de la GPU de la semana pasada.</li>
+    </ul>
+    <p style="margin:10px 0 0">Ese mismo día se había activado el perfil <b>A-XMP a 6000 MHz</b> del kit Corsair. Dos caídas de kernel en menos de 1.5&nbsp;h, justo bajo carga sostenida (GPU + disco por horas), es la firma clásica de un <b>perfil EXPO que aguanta carga corta pero no carga larga</b>. Esta guía baja la RAM a su velocidad de fábrica (JEDEC, sin overclock) como <b>prueba barata y reversible</b>: si en varios días de uso normal no vuelve a haber BSOD, confirma que era la RAM.</p>
+  </div>
+
+  <div class="card">
+    <h2 style="border:0;margin:0 0 10px;padding:0">🔎 Diagnóstico de TU equipo</h2>
+    <p class="lead" style="margin-top:0">Leído en vivo de tu PC.</p>
+    <table>
+      <tr><th>Componente</th><th>Valor detectado</th><th>Estado</th></tr>
+      <tr><td>Placa madre</td><td><b>MSI MAG B850 TOMAHAWK MAX WIFI</b> (MS-7E62)</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>BIOS</td><td>AMI ver. <b>2.A61</b> · <code>E7E62IMS.2A6</code></td><td><span class="pill ok">Actual</span></td></tr>
+      <tr><td>Memoria</td><td>2× Corsair <b>CMK48GX5M2E6000C36</b> = 48 GB (2×24)</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>Perfil actual</td><td><b>A-XMP Enabled · Profile 1</b> → DDR5-6000 · 36-44-44-96 · 1.400&nbsp;V</td><td><span class="pill warn">Sospechoso</span></td></tr>
+      <tr><td>BSOD hoy</td><td><code>0x3D</code> (14:49) y <code>0x4E PFN_LIST_CORRUPT</code> (16:24)</td><td><span class="pill bad">2 en 1.5 h</span></td></tr>
+    </table>
+    <div class="note"><b>Lectura clara:</b> no vas a "perder" RAM ni capacidad — sigues con los <b>48 GB completos</b>. Solo baja la <b>velocidad</b> de 6000 a la nativa del módulo (4800), que es mucho más conservadora y estable.</div>
+  </div>
+
+  <div class="warnbox">
+    <b>⚠️ Antes de empezar — lee esto:</b>
+    <ul style="margin:8px 0 0">
+      <li>El <b>primer arranque</b> tras cambiar el perfil puede tardar 15–60 s con pantalla en negro (la placa "re-entrena" la memoria a la nueva velocidad). <b>Es normal, no apagues a la fuerza.</b></li>
+      <li>Si el PC no arranca tras 2–3 intentos, la placa revierte sola a valores seguros. No se daña nada.</li>
+      <li>Guarda tu trabajo y cierra programas: vamos a reiniciar.</li>
+      <li>Esto es una <b>prueba temporal reversible</b>: si tras varios días sin BSOD confirmas que era la RAM, puedes decidir después si te quedas en 4800 (más estable) o intentas un punto intermedio (ej. 5600) con voltaje ajustado a mano.</li>
+    </ul>
+  </div>
+
+  <!-- ============ PASO 1 ============ -->
+  <h2><span class="n">Paso 1.</span> Entrar a la BIOS (Advanced Mode)</h2>
+  <p class="lead">Reinicia y, mientras aparece el logo MSI, toca <kbd>Supr</kbd> (Delete) varias veces. Ya dentro, pulsa <kbd>F7</kbd> para pasar a <b>Advanced Mode</b>.</p>
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Pulsa <kbd>Supr</kbd> / <kbd>Del</kbd> en el logo → luego <kbd>F7</kbd></h3>
+      <p>Alternativa en Windows 11: <kbd>Shift</kbd> + reiniciar → <i>Solucionar problemas → Opciones avanzadas → Configuración de firmware UEFI</i>.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="300" fill="#000"/>
+          <g opacity="0.10" fill="#e2e600">
+            <polygon points="520,0 560,0 480,300 440,300"/><polygon points="580,0 620,0 540,300 500,300"/>
+          </g>
+          <polygon points="400,90 372,150 428,150" fill="none" stroke="#e2e600" stroke-width="6"/>
+          <circle cx="400" cy="130" r="70" fill="none" stroke="#e2e600" stroke-width="4" opacity=".5"/>
+          <text x="400" y="200" fill="#fff" font-size="30" font-weight="bold" text-anchor="middle" font-family="Segoe UI">MSI</text>
+          <text x="400" y="230" fill="#98a2b8" font-size="15" text-anchor="middle" font-family="Segoe UI">MAG B850 TOMAHAWK MAX WIFI</text>
+          <rect x="250" y="255" width="300" height="30" rx="6" fill="#161a22" stroke="#2a3142"/>
+          <text x="400" y="275" fill="#ffe066" font-size="14" text-anchor="middle" font-family="Consolas">Press  DEL  to enter SETUP</text>
+        </svg>
+        <div class="cap">Pantalla de arranque — el momento para pulsar <b>Supr/Del</b>. Dentro, <kbd>F7</kbd> alterna EZ Mode ↔ Advanced Mode.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 2 ============ -->
+  <h2><span class="n">Paso 2.</span> OC → Overclocking → desactivar A-XMP (EXPO)</h2>
+  <p class="lead">En el menú <b>OC → Overclocking</b> cambia <b>Extreme Memory Profile (A-XMP)</b> de <b>Enabled · Profile 1</b> a <b>Disabled</b>. La memoria vuelve a su velocidad de fábrica (JEDEC). Así se ve en TU BIOS:</p>
+  <div class="step">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>Cambiar A-XMP a <b>Disabled</b> — DRAM Speed vuelve a <b>4800MT/s</b></h3>
+      <div class="fig">
+        <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+          <rect width="1000" height="560" fill="#08090d"/>
+          <g opacity="0.10" fill="#e2e600">
+            <polygon points="640,90 690,90 610,560 560,560"/><polygon points="720,90 770,90 690,560 640,560"/><polygon points="800,90 850,90 770,560 720,560"/>
+          </g>
+          <rect x="0" y="0" width="1000" height="46" fill="#0c0d12"/>
+          <text x="22" y="30" fill="#e8ecf4" font-size="18" font-weight="bold" letter-spacing="3">CLICK BIOS X</text>
+          <polygon points="185,10 300,10 315,28 300,46 185,46 200,28" fill="#e2e600"/>
+          <text x="212" y="33" fill="#0a0a00" font-size="13" font-weight="bold">Advanced (F7)</text>
+          <g fill="#e2e600"><polygon points="8,58 22,72 8,86"/><polygon points="26,58 40,72 26,86"/><polygon points="44,58 58,72 44,86"/></g>
+          <text x="905" y="29" fill="#cfd3da" font-size="12">Help (F1)</text>
+          <text x="176" y="80" fill="#e2e600" font-size="15" font-weight="bold">↰ Overclocking</text>
+          <line x1="176" y1="90" x2="820" y2="90" stroke="#23252c"/>
+          <text x="186" y="118" fill="#ffffff" font-size="14" font-weight="bold">Profile1: DDR5 6000MT/s 36-44-44-96 1.400V</text>
+          <text x="186" y="152" fill="#e8ecf4" font-size="14">Extreme Memory Profile (A-XMP)</text>
+          <rect x="560" y="138" width="250" height="24" rx="3" fill="#c9cdd6"/><text x="574" y="155" fill="#14161b" font-size="13">Disabled</text><polygon points="792,146 802,146 797,154" fill="#333"/>
+          <text x="186" y="186" fill="#e8ecf4" font-size="14">DRAM Speed</text>
+          <rect x="560" y="172" width="250" height="24" rx="3" fill="#c9cdd6"/><text x="574" y="189" fill="#14161b" font-size="13">Auto</text><polygon points="792,180 802,180 797,188" fill="#333"/>
+          <text x="186" y="220" fill="#e8ecf4" font-size="14">Adjusted DRAM Speed</text>
+          <text x="560" y="220" fill="#e2e600" font-size="14" font-weight="bold">4800MT/s</text>
+          <text x="186" y="254" fill="#e8ecf4" font-size="14">FCLK Frequency</text>
+          <rect x="560" y="240" width="250" height="24" rx="3" fill="#c9cdd6"/><text x="574" y="257" fill="#14161b" font-size="13">Auto</text><polygon points="792,248 802,248 797,256" fill="#333"/>
+          <text x="186" y="288" fill="#e8ecf4" font-size="14">Memory Try It !</text>
+          <rect x="560" y="274" width="250" height="24" rx="3" fill="#c9cdd6"/><text x="574" y="291" fill="#14161b" font-size="13">Disabled</text><polygon points="792,282 802,282 797,290" fill="#333"/>
+          <rect x="166" y="308" width="654" height="30" rx="4" fill="rgba(226,230,0,0.14)" stroke="#e2e600" stroke-width="1.5"/>
+          <text x="186" y="328" fill="#ffffff" font-size="14">Memory Context Restore</text>
+          <polygon points="500,318 500,332 512,325" fill="#e8ecf4"/>
+          <rect x="560" y="312" width="250" height="22" rx="3" fill="#eef0f4"/><text x="574" y="328" fill="#14161b" font-size="13">Enabled</text>
+          <text x="176" y="366" fill="#e8ecf4" font-size="14">›  Advanced DRAM Configuration</text>
+          <text x="186" y="398" fill="#e8ecf4" font-size="14">Voltage Setting</text>
+          <line x1="166" y1="420" x2="820" y2="420" stroke="#23252c"/>
+          <circle cx="176" cy="438" r="7" fill="none" stroke="#98a2b8" stroke-width="1.3"/><text x="176" y="442" fill="#98a2b8" font-size="10" text-anchor="middle">i</text>
+          <text x="192" y="442" fill="#98a2b8" font-size="12">Extreme Memory Profile (A-XMP). En Disabled, la memoria corre a su velocidad JEDEC nativa (sin overclock).</text>
+          <line x1="838" y1="46" x2="838" y2="560" stroke="#23252c"/>
+          <text x="852" y="70" fill="#e2e600" font-size="12" font-weight="bold">Information</text>
+          <text x="852" y="96" fill="#e8ecf4" font-size="11">MAG B850 TOMAHAWK…</text>
+          <text x="852" y="122" fill="#98a2b8" font-size="11">E7E62IMS.2A6</text>
+          <text x="852" y="156" fill="#e2e600" font-size="12" font-weight="bold">DRAM</text>
+          <text x="852" y="174" fill="#98a2b8" font-size="11">Size   48576 MB</text>
+          <text x="852" y="190" fill="#e8ecf4" font-size="11">Speed  4800 MT/s</text>
+        </svg>
+        <div class="cap">Tu menú <b>OC → Overclocking</b>: <b>A-XMP en Disabled</b> → memoria vuelve a <b>4800MT/s</b> (JEDEC, sin overclock). Recreación fiel de tu Click BIOS X.</div>
+      </div>
+      <div class="note"><b>Memory Context Restore</b> lo puedes dejar en <b>Enabled</b>, no afecta la estabilidad — solo acelera los arranques recordando el entrenamiento previo de memoria.</div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 3 ============ -->
+  <h2><span class="n">Paso 3.</span> Guardar y reiniciar</h2>
+  <p class="lead">Pulsa <kbd>F10</kbd>. El diálogo te muestra <b>exactamente qué cambió</b> antes de aplicar.</p>
+  <div class="step">
+    <div class="bub">3</div>
+    <div class="body">
+      <h3><kbd>F10</kbd> → <b>Save configuration and exit?</b> → <b>Yes</b></h3>
+      <div class="fig">
+        <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+          <rect width="1000" height="500" fill="#08090d"/>
+          <g opacity="0.10" fill="#e2e600">
+            <polygon points="700,60 750,60 670,500 620,500"/><polygon points="780,60 830,60 750,500 700,500"/><polygon points="860,60 910,60 830,500 780,500"/>
+          </g>
+          <rect x="0" y="0" width="1000" height="46" fill="#0c0d12"/>
+          <text x="22" y="30" fill="#e8ecf4" font-size="18" font-weight="bold" letter-spacing="3">CLICK BIOS X</text>
+          <polygon points="185,10 300,10 315,28 300,46 185,46 200,28" fill="#e2e600"/>
+          <text x="212" y="33" fill="#0a0a00" font-size="13" font-weight="bold">Advanced (F7)</text>
+          <text x="905" y="29" fill="#cfd3da" font-size="12">Help (F1)</text>
+          <text x="176" y="80" fill="#e2e600" font-size="15" font-weight="bold">↰ Overclocking</text>
+          <text x="40" y="270" fill="#3a3d18" font-size="40" font-weight="bold" letter-spacing="2">MAG</text>
+          <text x="40" y="292" fill="#2f3115" font-size="12" letter-spacing="2">ARSENAL GAMING</text>
+          <line x1="838" y1="46" x2="838" y2="500" stroke="#23252c"/>
+          <text x="852" y="88" fill="#e8ecf4" font-size="11">…OMAHAWK MAX WIFI</text>
+          <text x="852" y="104" fill="#98a2b8" font-size="11">E7E62IMS.2A6</text>
+          <text x="852" y="138" fill="#e8ecf4" font-size="11">7900X 12-Core Proc</text>
+          <text x="852" y="154" fill="#98a2b8" font-size="11">4.70 GHz · 1.27 V</text>
+          <text x="852" y="170" fill="#98a2b8" font-size="11">Temp 50 °C</text>
+          <clipPath id="mcx"><rect x="235" y="120" width="600" height="250" rx="6"/></clipPath>
+          <rect x="235" y="120" width="600" height="250" rx="6" fill="#0a0b0e" stroke="#e2e600" stroke-width="3"/>
+          <g opacity="0.16" fill="#e2e600" clip-path="url(#mcx)">
+            <polygon points="640,120 690,120 610,370 560,370"/><polygon points="720,120 770,120 690,370 640,370"/>
+          </g>
+          <text x="535" y="160" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">Save configuration and exit?</text>
+          <text x="812" y="162" fill="#e8ecf4" font-size="18" text-anchor="end">✕</text>
+          <rect x="262" y="180" width="546" height="115" fill="#000" stroke="#2a3142"/>
+          <text x="276" y="204" fill="#98a2b8" font-size="12" font-family="Consolas, monospace">2026/8/28 17:30:12</text>
+          <text x="276" y="226" fill="#e8ecf4" font-size="12" font-family="Consolas, monospace">A-XMP: [Enabled]→[Disabled]</text>
+          <text x="276" y="248" fill="#e8ecf4" font-size="12" font-family="Consolas, monospace">DRAM Speed: [6000MT/s]→[4800MT/s]</text>
+          <rect x="360" y="315" width="120" height="34" rx="4" fill="#2a2d34"/>
+          <text x="420" y="337" fill="#e8ecf4" font-size="14" text-anchor="middle">No</text>
+          <rect x="520" y="313" width="120" height="38" rx="4" fill="#e2e600" stroke="#ffffff" stroke-width="2"/>
+          <text x="580" y="337" fill="#0a0a00" font-size="14" font-weight="bold" text-anchor="middle">Yes</text>
+        </svg>
+        <div class="cap">Tu diálogo real de guardado: <b>A-XMP [Enabled]→[Disabled]</b> y <b>DRAM Speed [6000MT/s]→[4800MT/s]</b>. Confirma <b>Yes</b>. El primer arranque puede tardar por el <i>memory training</i>. Paciencia.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 4 ============ -->
+  <h2><span class="n">Paso 4.</span> Validar que funcionó (en Windows)</h2>
+  <p class="lead">No basta con desactivarlo: <b>hay que comprobar el efecto real.</b> Dos formas, la 2ª es la fiable.</p>
+  <div class="step">
+    <div class="bub">4</div>
+    <div class="body">
+      <h3>A) Administrador de tareas <span class="tag">(rápido)</span></h3>
+      <p><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> → pestaña <b>Rendimiento</b> → <b>Memoria</b>. Debe decir <b>Velocidad: 4800 MHz</b> (bajó desde 6000) y sigue en <b>48.0 GB</b>.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="200" fill="#191b1f"/>
+          <text x="30" y="42" fill="#fff" font-size="17" font-weight="bold" font-family="Segoe UI">Memoria</text>
+          <text x="770" y="42" fill="#98a2b8" font-size="14" text-anchor="end" font-family="Segoe UI">48.0 GB DDR5</text>
+          <line x1="30" y1="58" x2="770" y2="58" stroke="#2a3142"/>
+          <text x="30" y="100" fill="#98a2b8" font-size="13" font-family="Segoe UI">En uso</text>
+          <text x="30" y="120" fill="#fff" font-size="15" font-family="Segoe UI">12.4 GB</text>
+          <text x="250" y="100" fill="#98a2b8" font-size="13" font-family="Segoe UI">Disponible</text>
+          <text x="250" y="120" fill="#fff" font-size="15" font-family="Segoe UI">35.6 GB</text>
+          <text x="520" y="100" fill="#98a2b8" font-size="13" font-family="Segoe UI">Velocidad</text>
+          <text x="520" y="120" fill="#ffb020" font-size="15" font-weight="bold" font-family="Segoe UI">4800 MHz</text>
+          <text x="30" y="165" fill="#98a2b8" font-size="13" font-family="Segoe UI">Ranuras usadas</text>
+          <text x="30" y="185" fill="#fff" font-size="15" font-family="Segoe UI">2 de 4</text>
+          <text x="250" y="165" fill="#98a2b8" font-size="13" font-family="Segoe UI">Factor de forma</text>
+          <text x="250" y="185" fill="#fff" font-size="15" font-family="Segoe UI">DIMM</text>
+        </svg>
+        <div class="cap">Administrador de tareas → Rendimiento → Memoria. Ahora debe marcar <b>Velocidad: 4800 MHz</b>.</div>
+      </div>
+      <div class="warnbox"><b>Ojo con un detalle:</b> Windows a veces reporta <b>DDR "efectiva/2"</b>. Si ves <b>2400 MHz</b> ahí, NO es error: 2400 × 2 (DDR) = <b>DDR5-4800</b>.</div>
+
+      <h3 style="margin-top:26px">B) CPU-Z <span class="tag">(la prueba definitiva)</span></h3>
+      <p>Descarga <a href="https://www.cpuid.com/softwares/cpu-z.html">CPU-Z</a> → pestaña <b>Memory</b>. En <b>DRAM Frequency</b> debe marcar <b>~2400 MHz</b> (recuerda: ×2 = 4800). Si sigue en <b>~3000 MHz</b>, el A-XMP NO quedó desactivado → vuelve al Paso 2.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 210" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="210" fill="#ece9d8"/>
+          <rect x="0" y="0" width="800" height="30" fill="#0a246a"/>
+          <text x="14" y="20" fill="#fff" font-size="13" font-weight="bold" font-family="Tahoma,Segoe UI">CPU-Z</text>
+          <rect x="12" y="40" width="70" height="22" rx="3" fill="#d4d0c8" stroke="#808080"/>
+          <text x="47" y="55" fill="#000" font-size="12" text-anchor="middle" font-family="Tahoma">Memory</text>
+          <rect x="12" y="70" width="776" height="128" fill="#f5f4ef" stroke="#808080"/>
+          <text x="30" y="98" fill="#000" font-size="13" font-family="Tahoma">Type</text>
+          <text x="230" y="98" fill="#000" font-size="13" font-family="Tahoma" font-weight="bold">DDR5</text>
+          <text x="30" y="124" fill="#000" font-size="13" font-family="Tahoma">Size</text>
+          <text x="230" y="124" fill="#000" font-size="13" font-family="Tahoma" font-weight="bold">48 GBytes  (Dual Channel)</text>
+          <text x="30" y="150" fill="#000" font-size="13" font-family="Tahoma">DRAM Frequency</text>
+          <rect x="222" y="136" width="120" height="20" fill="#fff8c4" stroke="#c9a100"/>
+          <text x="230" y="150" fill="#a00" font-size="13" font-family="Tahoma" font-weight="bold">2400.0 MHz</text>
+          <text x="360" y="150" fill="#555" font-size="12" font-family="Tahoma">( × 2 = DDR5-4800 )</text>
+          <text x="30" y="176" fill="#000" font-size="13" font-family="Tahoma">FSB:DRAM</text>
+          <text x="230" y="176" fill="#000" font-size="13" font-family="Tahoma">1:38</text>
+        </svg>
+        <div class="cap">CPU-Z → Memory. <b>DRAM Frequency ≈ 2400 MHz</b> confirma que corres a DDR5-4800, sin overclock. ✅</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PASO 5 ============ -->
+  <h2><span class="n">Paso 5.</span> Observar unos días antes de sacar conclusiones</h2>
+  <p class="lead">Esto es una <b>prueba</b>, no el arreglo final. Necesitas ver el comportamiento bajo la misma carga que causó los BSOD (GPU trabajando horas seguidas, como una transcripción larga).</p>
+  <div class="step">
+    <div class="bub">5</div>
+    <div class="body">
+      <table>
+        <tr><th>Resultado</th><th>Conclusión</th><th>Siguiente paso</th></tr>
+        <tr><td><span class="pill ok">Sin BSOD varios días</span></td><td>Era la RAM a 6000 MHz</td><td>Quedarte en 4800 (estable) o probar un punto intermedio (5600) con voltaje ajustado a mano, si quieres recuperar algo de velocidad.</td></tr>
+        <tr><td><span class="pill bad">Vuelve a fallar</span></td><td>No era la RAM</td><td>Vuelve la sospecha a la <b>fuente PX1200G</b> (voltaje inestable bajo carga) o al driver de GPU. Correr <code>OCCT Power test</code> para confirmar la fuente.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="okbox" style="margin-top:36px">
+    <b>✅ Resumen de tu caso</b>
+    <ul style="margin:8px 0 0">
+      <li><b>A-XMP (EXPO) = Disabled</b>: tu cambio real — de 6000 baja a <b>4800 MHz</b> (JEDEC, sin overclock). Prueba de estabilidad.</li>
+      <li>Sigues con los <b>48 GB completos</b>, solo cambia la velocidad.</li>
+      <li>Reversible en cualquier momento: repite estos pasos y vuelve a poner A-XMP en <b>Enabled · Profile 1</b> si quieres regresar a 6000.</li>
+      <li>Ningún cambio borra datos ni daña el hardware.</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <b>Fuentes oficiales / de referencia</b> (por si quieres ver fotos reales de la BIOS):
+    <ul>
+      <li><a href="https://www.msi.com/blog/how-to-speed-up-your-ram-with-overclocking-the-ultimate-guide-to-enabling-xmp-and-expo">MSI — How to enable XMP and EXPO (blog oficial)</a></li>
+      <li><a href="../activar-ram-expo-msi/">Tutorial hermano: activar EXPO (el proceso inverso)</a></li>
+    </ul>
+    <p>Ilustraciones recreadas fielmente de la interfaz <b>MSI Click BIOS X</b> (tema MAG Arsenal Gaming) a partir de fotos reales del equipo. Generado para <b>MSI MAG B850 TOMAHAWK MAX WIFI</b> · BIOS 2.A61 · actualizado 28-ago-2026 a raíz de los BSOD 0x3D/0x4E.</p>
+  </div>
+
+</div>
+</body>
+</html>
