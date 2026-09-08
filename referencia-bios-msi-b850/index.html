@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de tu BIOS — MSI MAG B850 Tomahawk Max WiFi (Click BIOS X)</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d2230; --line:#2a3142;
+    --y:#e2e600; --y2:#f2f24d; --ydim:#8a8b00; --txt:#e8ecf4; --mut:#98a2b8;
+    --ok:#2ec26a; --warn:#ffb020; --accent:#5aa9ff; --bad:#ff5a72;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0a0c11,#0d0f14 300px);color:var(--txt);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 20px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(600px 200px at 50% -40px,rgba(226,230,0,.16),transparent)}
+  header .kick{color:var(--y);font-weight:700;letter-spacing:2px;font-size:13px;text-transform:uppercase}
+  header h1{font-size:34px;margin:10px 0 6px;line-height:1.2}
+  header p{color:var(--mut);margin:0;font-size:16px}
+  h2{font-size:24px;margin:48px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--y)}
+  h3{font-size:18px;margin:26px 0 6px}
+  .lead{color:var(--mut);margin:4px 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td b{color:#fff}
+  code{background:#0b0d12;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#ffe066}
+  .path{font-family:Consolas,monospace;font-size:13px;color:#ffe066;white-space:nowrap}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(46,194,106,.15);color:var(--ok)}
+  .pill.warn{background:rgba(255,176,32,.15);color:var(--warn)}
+  .pill.bad{background:rgba(255,90,114,.15);color:var(--bad)}
+  .pill.info{background:rgba(90,169,255,.15);color:var(--accent)}
+  .note{border-left:3px solid var(--accent);background:rgba(90,169,255,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .warnbox{border-left:3px solid var(--warn);background:rgba(255,176,32,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .okbox{border-left:3px solid var(--ok);background:rgba(46,194,106,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  kbd{background:#0b0d12;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:2px 8px;font-family:Consolas,monospace;font-size:13px;color:#fff}
+  a{color:var(--accent)}
+  ul{padding-left:20px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+  .toc a{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:20px;
+    padding:5px 14px;font-size:13px;text-decoration:none;color:var(--txt)}
+  .toc a:hover{border-color:var(--y)}
+  .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .tag{font-size:12px;color:var(--mut);font-family:Consolas,monospace}
+  .fig{background:#000;border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .fig svg{display:block;width:100%;height:auto}
+  .cap{font-size:13px;color:var(--mut);padding:8px 12px;border-top:1px solid var(--line);background:#0b0d12}
+
+  /* ====== Responsivo: iPhone 15 Pro Max / iPad ====== */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  .card,.note,.warnbox,.okbox{overflow-wrap:break-word}
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  @media (max-width:640px){
+    header{padding:38px 16px 26px}
+    header h1{font-size:22px}
+    header p{font-size:14px}
+    header .kick{font-size:11px;letter-spacing:1.5px}
+    .wrap{padding:0 14px 60px}
+    h2{font-size:19px;margin:34px 0 4px}
+    h3{font-size:16px}
+    .lead{font-size:14px;margin-bottom:16px}
+    .card{padding:15px 15px}
+    table{font-size:13px;min-width:520px}
+    th,td{padding:8px 8px}
+    .path{white-space:normal}
+    .fig{overflow-x:auto;overflow-y:hidden}
+    .fig svg{min-width:640px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">MSI Click BIOS X · MAG Arsenal Gaming · AMD AM5</div>
+  <h1>Mapa de tu BIOS</h1>
+  <p>Dónde vive cada opción y qué valor tienes hoy · <b>MSI MAG B850 Tomahawk Max WiFi</b></p>
+</header>
+
+<div class="wrap">
+
+  <div class="note" style="margin-top:24px">
+    <b>Para qué sirve esta página:</b> es tu <b>chuleta personal</b>. Cuando necesites cambiar algo en el BIOS, aquí ves <b>la ruta exacta de menús</b> y el <b>valor que tienes ahora</b>, para que le des a la opción correcta sin adivinar. Hecha a partir de las <b>115 fotos reales</b> de tu BIOS del 8-sep-2026.
+    <div class="toc">
+      <a href="#chuleta">⚡ Chuleta rápida</a>
+      <a href="#estado">📊 Estado actual</a>
+      <a href="#oc">🚀 Overclocking</a>
+      <a href="#voltajes">⚡ Voltajes</a>
+      <a href="#ram">🧠 Memoria</a>
+      <a href="#advanced">⚙️ Advanced</a>
+      <a href="#security">🔒 Security</a>
+      <a href="#boot">💾 Boot</a>
+    </div>
+  </div>
+
+  <!-- ============ DIAGNÓSTICO ============ -->
+  <div class="card">
+    <h2 style="border:0;margin:0 0 10px;padding:0">🖥️ Tu equipo</h2>
+    <div class="tablewrap"><table>
+      <tr><th>Componente</th><th>Detectado</th></tr>
+      <tr><td>Placa madre</td><td><b>MSI MAG B850 TOMAHAWK MAX WIFI</b> (MS-7E62) · versión 2.0</td></tr>
+      <tr><td>BIOS</td><td><code>E7E62AMS1.2A61</code> · AMI · build <b>08-jun-2026</b></td></tr>
+      <tr><td>CPU</td><td><b>AMD Ryzen 9 7900X</b> · 12 núcleos / 24 hilos · Zen 4 · 4.70 GHz · CPUID <code>A60F12</code></td></tr>
+      <tr><td>Memoria</td><td>2× Corsair <b>CMK48GX5M2E6000C36</b> = 48 GB (2×24) · slots <b>A2 + B2</b> (A1/B1 vacías) · UDIMM · PMIC Anpec</td></tr>
+      <tr><td>Almacenamiento</td><td>M2_1 = <b>Predator GM9 2TB</b> (Ubuntu) · M2_2 = <b>Kingston SNVS1000G 1TB</b> (Windows) · + 2 HDD SATA de 1 TB (WD Green, Seagate)</td></tr>
+      <tr><td>Arranque</td><td><b>Dual-boot UEFI</b>: Windows Boot Manager (#1) · Ubuntu (#2)</td></tr>
+    </table></div>
+  </div>
+
+  <!-- ============ CHULETA ============ -->
+  <h2 id="chuleta"><span class="n">⚡</span> Chuleta rápida — "quiero hacer X, ¿dónde le doy?"</h2>
+  <p class="lead">Primero pulsa <kbd>Supr</kbd>/<kbd>Del</kbd> en el logo MSI para entrar, y <kbd>F7</kbd> para pasar a <b>Advanced Mode</b> (donde vive casi todo). Guardar siempre con <kbd>F10</kbd> → <b>Yes</b>.</p>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Quiero…</th><th>Ruta exacta en TU BIOS</th><th>Opción / valor</th></tr>
+      <tr><td><b>Subir la RAM a 6000</b> (activar EXPO)</td><td class="path">OC › Overclocking › <b>A-XMP</b></td><td>Ponerlo en <code>Enabled</code> (Profile 1)</td></tr>
+      <tr><td><b>Bajar la RAM a 4800</b> (desactivar EXPO)</td><td class="path">OC › Overclocking › <b>A-XMP</b></td><td>Ponerlo en <code>Disabled</code> ← <span class="pill ok">tu estado hoy</span></td></tr>
+      <tr><td><b>Activar PBO</b> (boost del CPU)</td><td class="path">OC › Advanced CPU Configuration › AMD Overclocking › <b>Precision Boost Overdrive</b></td><td>Hoy en <code>Auto</code></td></tr>
+      <tr><td><b>Ver timings/voltaje de RAM</b></td><td class="path">OC › <b>Advanced DRAM Configuration</b></td><td>Todo en <code>Auto</code></td></tr>
+      <tr><td><b>Ajustar voltajes</b> (SoC, DRAM, VDDIO)</td><td class="path">OC › (bajar a) <b>Voltage Setting</b></td><td>Todo en <code>Auto</code></td></tr>
+      <tr><td><b>Cambiar orden de arranque</b></td><td class="path">Boot › <b>Boot Option #1</b></td><td>Windows (#1) / Ubuntu (#2)</td></tr>
+      <tr><td><b>Secure Boot / TPM</b></td><td class="path">Security › <b>Secure Boot</b> · Security › Trusted Computing</td><td>Secure Boot <code>Enabled</code> · fTPM <code>Enabled</code></td></tr>
+      <tr><td><b>Re-Size BAR</b> (para la GPU)</td><td class="path">Advanced › PCIe Subsystem Settings › <b>Re-Size BAR Support</b></td><td>Hoy <code>Enabled</code></td></tr>
+      <tr><td><b>Guardar un perfil de BIOS</b></td><td class="path"><kbd>F8</kbd> cargar / <kbd>F6</kbd> reset · <b>OC Profile</b></td><td>6 ranuras en ROM</td></tr>
+      <tr><td><b>Volver todo a fábrica</b></td><td class="path"><kbd>F6</kbd> (Load Optimized Defaults) o <b>Clear CMOS</b></td><td>Reversible, no daña nada</td></tr>
+    </table></div>
+  </div>
+
+  <!-- ============ ESTADO ACTUAL ============ -->
+  <h2 id="estado"><span class="n">📊</span> Estado actual (foto del 8-sep-2026)</h2>
+  <p class="lead">Todo tu sistema está en <b>valores de fábrica / Auto</b>. La única personalización que tenías (EXPO 6000) la acabas de desactivar como prueba de estabilidad.</p>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Área</th><th>Opción</th><th>Valor actual</th><th></th></tr>
+      <tr><td rowspan="4"><b>Memoria</b></td><td>A-XMP (EXPO)</td><td><code>Disabled</code></td><td><span class="pill ok">Prueba estabilidad</span></td></tr>
+      <tr><td>Velocidad real</td><td><b>DDR5-4800</b> (JEDEC) — verificado en Windows</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>Memory Try It!</td><td><code>Disabled</code></td><td></td></tr>
+      <tr><td>Memory Context Restore</td><td><code>Enabled</code> (30 días)</td><td><span class="pill info">arranque rápido</span></td></tr>
+      <tr><td rowspan="4"><b>CPU / OC</b></td><td>Precision Boost Overdrive</td><td><code>Auto</code></td><td><span class="pill info">sin OC</span></td></tr>
+      <tr><td>CPU Ratio</td><td><code>Auto</code> (4.70 GHz stock)</td><td></td></tr>
+      <tr><td>Curve Optimizer</td><td>sin usar</td><td></td></tr>
+      <tr><td>FCLK / UCLK / Infinity Fabric</td><td><code>Auto</code></td><td></td></tr>
+      <tr><td rowspan="2"><b>Seguridad</b></td><td>Secure Boot</td><td><code>Enabled</code> (Standard)</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>fTPM 2.0 (AMD)</td><td><code>Enabled</code> · firmware 6.33</td><td><span class="pill ok">Win11</span></td></tr>
+    </table></div>
+    <div class="okbox"><b>En una frase:</b> equipo limpio, sin overclock manual. Corriendo la RAM a su velocidad nativa 4800 con voltaje bajo (1.10 V) mientras descartas la RAM como causa de los pantallazos azules.</div>
+  </div>
+
+  <!-- ============ OVERCLOCKING ============ -->
+  <h2 id="oc"><span class="n">🚀</span> Menú OC (Overclocking) — el corazón</h2>
+  <p class="lead">Aquí vive TODO lo de rendimiento: velocidad de RAM, PBO, voltajes y timings. Es el menú que más vas a tocar.</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+      <rect width="1000" height="470" fill="#08090d"/>
+      <g opacity="0.10" fill="#e2e600"><polygon points="640,60 690,60 610,470 560,470"/><polygon points="720,60 770,60 690,470 640,470"/><polygon points="800,60 850,60 770,470 720,470"/></g>
+      <rect x="0" y="0" width="1000" height="46" fill="#0c0d12"/>
+      <text x="22" y="30" fill="#e8ecf4" font-size="18" font-weight="bold" letter-spacing="3">CLICK BIOS X</text>
+      <polygon points="185,10 300,10 315,28 300,46 185,46 200,28" fill="#e2e600"/>
+      <text x="212" y="33" fill="#0a0a00" font-size="13" font-weight="bold">Advanced (F7)</text>
+      <text x="905" y="29" fill="#cfd3da" font-size="12">Help (F1)</text>
+      <text x="176" y="78" fill="#e2e600" font-size="15" font-weight="bold">↰ Overclocking</text>
+      <line x1="176" y1="88" x2="820" y2="88" stroke="#23252c"/>
+      <text x="186" y="116" fill="#98a2b8" font-size="13">OC Explore Mode</text><text x="700" y="116" fill="#c9cdd6" font-size="13">Expert</text>
+      <text x="186" y="146" fill="#98a2b8" font-size="13">CPU Ratio</text><text x="700" y="146" fill="#c9cdd6" font-size="13">Auto (47 · 4.70GHz)</text>
+      <text x="186" y="176" fill="#e8ecf4" font-size="13">› Advanced CPU Configuration</text><text x="700" y="176" fill="#98a2b8" font-size="11">(PBO vive aquí dentro)</text>
+      <rect x="166" y="192" width="654" height="28" rx="4" fill="rgba(226,230,0,0.14)" stroke="#e2e600" stroke-width="1.5"/>
+      <text x="186" y="211" fill="#ffffff" font-size="13" font-weight="bold">A-XMP</text>
+      <rect x="640" y="196" width="170" height="20" rx="3" fill="#c9cdd6"/><text x="654" y="211" fill="#14161b" font-size="12">Disabled</text>
+      <text x="186" y="240" fill="#98a2b8" font-size="13">Adjusted DRAM Speed</text><text x="700" y="240" fill="#e2e600" font-size="13" font-weight="bold">4800 MT/s</text>
+      <text x="186" y="270" fill="#98a2b8" font-size="13">FCLK Frequency / UCLK DIV1 MODE</text><text x="700" y="270" fill="#c9cdd6" font-size="13">Auto</text>
+      <text x="186" y="300" fill="#e8ecf4" font-size="13">› Advanced DRAM Configuration</text><text x="700" y="300" fill="#98a2b8" font-size="11">(timings)</text>
+      <text x="186" y="330" fill="#98a2b8" font-size="13">Memory Context Restore</text><text x="700" y="330" fill="#c9cdd6" font-size="13">Enabled</text>
+      <text x="186" y="360" fill="#e8ecf4" font-size="13">Voltage Setting ↓ (DRAM, SoC, VDDIO…)</text><text x="700" y="360" fill="#c9cdd6" font-size="13">Auto</text>
+      <line x1="838" y1="46" x2="838" y2="470" stroke="#23252c"/>
+      <text x="852" y="70" fill="#e2e600" font-size="12" font-weight="bold">DRAM</text>
+      <text x="852" y="90" fill="#98a2b8" font-size="11">Size 49152 MB</text>
+      <text x="852" y="108" fill="#e8ecf4" font-size="11">Speed 4800 MT/s</text>
+    </svg>
+    <div class="cap">Recreación de tu menú <b>OC → Overclocking</b>. La opción resaltada (<b>A-XMP</b>) es la que enciende/apaga los 6000 MHz.</div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Qué hay dentro de OC</h3>
+    <div class="tablewrap"><table>
+      <tr><th>Sección</th><th>Opciones clave (tu valor)</th></tr>
+      <tr><td><b>CPU Setting</b></td><td>OC Explore Mode <code>Expert</code> · CPU Ratio Apply Mode <code>All Core</code> · CPU Ratio <code>Auto</code> · Adjusted CPU Frequency <code>4700 MHz</code> · X3D Gaming Mode <code>Disabled</code></td></tr>
+      <tr><td><b>DRAM Setting</b></td><td>A-XMP <code>Disabled</code> · DRAM Speed <code>Auto</code> · Adjusted DRAM Speed <code>4800 MT/s</code> · Memory Try It! <code>Disabled</code></td></tr>
+      <tr><td><b>› Advanced CPU Configuration</b></td><td>Contiene <b>AMD Overclocking</b> (→ PBO, Core Control, SMT), <b>AMD CBS</b> (opciones bajas), PSS Support <code>Enabled</code>, NX Mode <code>Enabled</code></td></tr>
+      <tr><td><b>› Advanced DRAM Configuration</b></td><td>Todos los timings (ver sección Memoria) + A-XMP User Profile (perfiles guardados: <b>vacíos</b>)</td></tr>
+      <tr><td><b>Voltage Setting</b></td><td>DRAM / DRAM VDDQ / DRAM VPP / CPU VDDIO / CPU NB-SoC / VDDG / VDDP / CHIPSET — todos <code>Auto</code></td></tr>
+      <tr><td><b>› DigitALL Power</b></td><td>CPU Loadline Calibration (LLC), OVP, OCP, Switching Freq, VRM OTP — todos <code>Auto</code></td></tr>
+      <tr><td><b>› MEMORY-Z / CPU Specifications</b></td><td>Solo lectura: SPD de los módulos y specs del CPU</td></tr>
+    </table></div>
+    <div class="note"><b>Dónde está PBO exactamente:</b> <span class="path">OC › Advanced CPU Configuration › AMD Overclocking › Precision Boost Overdrive</span>. También hay un acceso rápido en <b>EZ Mode</b> (<i>Precision Boost Overdrive</i>) y un <b>Performance Preset</b> con <code>PBO Auto</code> / <code>PBO Enable</code>.</div>
+  </div>
+
+  <!-- ============ VOLTAJES ============ -->
+  <h2 id="voltajes"><span class="n">⚡</span> Voltajes (en <code>Auto</code>, valores leídos en vivo)</h2>
+  <p class="lead">Ninguno está fijado a mano — todos en <code>Auto</code>. Estos son los valores que la placa aplicaba <b>con EXPO 6000</b>. Al desactivar EXPO, varios bajan solos (menos estrés).</p>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Voltaje</th><th>Con EXPO 6000</th><th>Comentario</th></tr>
+      <tr><td>DRAM Voltage (VDD)</td><td><b>1.400 V</b></td><td>Perfil EXPO. En 4800 baja a ~<b>1.10 V</b></td></tr>
+      <tr><td>DRAM VDDQ</td><td><b>1.400 V</b></td><td>igual que VDD</td></tr>
+      <tr><td>DRAM VPP</td><td>1.850 V</td><td>estándar DDR5</td></tr>
+      <tr><td>CPU VDDIO</td><td><b>1.408 V</b></td><td>sube con EXPO (default 1.10 V)</td></tr>
+      <tr><td>CPU NB / SoC</td><td><b>1.320–1.322 V</b></td><td><span class="pill warn">vigilar</span> límite alto en AM5</td></tr>
+      <tr><td>VDD MISC</td><td>1.081 V</td><td>normal</td></tr>
+      <tr><td>CHIPSET Core</td><td>1.033 V</td><td>normal</td></tr>
+    </table></div>
+    <div class="warnbox"><b>El único a vigilar:</b> el <b>SoC (CPU NB/SoC) a 1.32 V</b> estaba en el límite alto recomendado en AM5 (el tope seguro es 1.30 V). Eso pasaba <b>por el EXPO 6000</b>. Ahora que está en 4800, el SoC debería bajar solo. Si algún día vuelves a 6000 y quieres ir seguro, se puede fijar SoC en <code>1.25 V</code> a mano en <i>Voltage Setting</i>.</div>
+  </div>
+
+  <!-- ============ MEMORIA ============ -->
+  <h2 id="ram"><span class="n">🧠</span> Memoria — tus dos perfiles</h2>
+  <p class="lead">Tu kit Corsair guarda dos "recetas". El BIOS las llama así:</p>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Perfil</th><th>Velocidad</th><th>Timings (CL-tRCD-tRP-tRAS)</th><th>Voltaje</th><th>Cuándo</th></tr>
+      <tr><td><b>JEDEC Standard</b></td><td>DDR5-<b>4800</b></td><td>40-40-40-77</td><td>~1.10 V</td><td><span class="pill ok">activo hoy</span> · estable, seguro</td></tr>
+      <tr><td><b>XMP1 (EXPO)</b></td><td>DDR5-<b>6000</b></td><td>36-44-44-96</td><td>1.40 V</td><td>máximo rendimiento (sospechoso de BSOD)</td></tr>
+    </table></div>
+    <h3>Timings efectivos con EXPO 6000 (todos en Auto)</h3>
+    <div class="tablewrap"><table>
+      <tr><th>tCL</th><th>tRCD</th><th>tRP</th><th>tRAS</th><th>tRC</th><th>tWR</th><th>tRFC1</th><th>tRFC2</th><th>tREFI</th></tr>
+      <tr><td>36</td><td>44</td><td>44</td><td>96</td><td>146</td><td>90</td><td>1228</td><td>659</td><td>11677</td></tr>
+    </table></div>
+    <div class="note">Los perfiles personalizados (<b>A-XMP User Profile 1 y 2</b>) están <b>vacíos</b> — nunca guardaste una receta manual. Si algún día quieres un punto intermedio estable (ej. DDR5-5600), ahí es donde se guardaría.</div>
+  </div>
+
+  <!-- ============ ADVANCED ============ -->
+  <h2 id="advanced"><span class="n">⚙️</span> Menú Advanced (periféricos y sistema)</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Submenú</th><th>Tu valor</th></tr>
+      <tr><td><b>PCIe Subsystem Settings</b></td><td>Re-Size BAR <code>Enabled</code> · Above 4G <code>Enabled</code> · M.2_1/M.2_2 Gen Mode <code>Auto</code> · SR-IOV <code>Disabled</code></td></tr>
+      <tr><td><b>Integrated Peripherals</b></td><td>LAN <code>Auto</code> · Network Stack <code>Enabled</code> · Wi-Fi/BT <code>Disabled</code> · SATA Mode <code>AHCI</code> · HD Audio <code>Enabled</code></td></tr>
+      <tr><td><b>Integrated Graphics</b></td><td>Initiate Graphic Adapter <code>PEG</code> (usa tu GPU dedicada) · HybridGraphics <code>Disabled</code></td></tr>
+      <tr><td><b>Power Management</b></td><td>ErP Ready <code>Disabled</code> · Restore after AC Power Loss <code>Power off</code></td></tr>
+      <tr><td><b>Wake Up Event</b></td><td>By <code>BIOS</code> · RTC/PCI-E/USB <code>Disabled</code></td></tr>
+      <tr><td><b>USB Configuration</b></td><td>XHCI Hand-off <code>Enabled</code> · Legacy USB <code>Enabled</code></td></tr>
+      <tr><td><b>BIOS UEFI/CSM Mode</b></td><td><code>UEFI</code> (sin CSM — correcto para Win11 + Secure Boot)</td></tr>
+    </table></div>
+  </div>
+
+  <!-- ============ SECURITY ============ -->
+  <h2 id="security"><span class="n">🔒</span> Menú Security</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Opción</th><th>Tu valor</th></tr>
+      <tr><td>Administrator / User Password</td><td><code>Not Installed</code> (sin contraseña de BIOS)</td></tr>
+      <tr><td>Trusted Computing → AMD fTPM</td><td><code>Enabled</code> · TPM 2.0 · firmware 6.33 · PCR SHA256</td></tr>
+      <tr><td>Secure Boot</td><td><code>Enabled</code> · modo <code>Standard</code> · System Mode <code>User</code></td></tr>
+      <tr><td>Chassis Intrusion</td><td><code>Disabled</code></td></tr>
+    </table></div>
+    <div class="note"><b>Ojo si algún día reinstalas o cambias de disco de arranque:</b> con <b>Secure Boot Enabled</b> y solo <b>UEFI</b>, Windows 11 arranca bien. Si metes un sistema que no arranca, aquí es donde se apaga temporalmente Secure Boot.</div>
+  </div>
+
+  <!-- ============ BOOT ============ -->
+  <h2 id="boot"><span class="n">💾</span> Menú Boot</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Opción</th><th>Tu valor</th></tr>
+      <tr><td>Boot mode select</td><td><code>UEFI</code></td></tr>
+      <tr><td>Full Screen Logo</td><td><code>Enabled</code></td></tr>
+      <tr><td>Boot Option #1</td><td><b>Windows Boot Manager</b> (M2_2 : Kingston SNVS1000G)</td></tr>
+      <tr><td>Boot Option #2</td><td><b>Ubuntu</b> (M2_1 : Predator SSD GM9)</td></tr>
+    </table></div>
+    <div class="note">Para elegir arranque puntual sin cambiar el orden: pulsa <kbd>F11</kbd> en el logo MSI (menú de arranque rápido).</div>
+  </div>
+
+  <div class="foot">
+    <p><b>Nota importante:</b> todos estos valores son la foto de tu BIOS al <b>8-sep-2026</b>, con el BIOS <code>E7E62AMS1.2A61</code>. Si actualizas el BIOS o mueves ajustes, algunos cambiarán. Cuando toques algo, vale la pena volver a fotografiar y actualizar esta página.</p>
+    <p>Guías relacionadas:
+      <a href="../activar-ram-expo-msi/">Activar EXPO</a> ·
+      <a href="../desactivar-ram-expo-msi/">Desactivar EXPO</a> ·
+      <a href="../overclock-pbo-ryzen-7900x-msi/">PBO + Curve Optimizer</a>
+    </p>
+    <p>Ilustraciones recreadas de la interfaz <b>MSI Click BIOS X</b> (tema MAG Arsenal Gaming) a partir de fotos reales del equipo.</p>
+  </div>
+
+</div>
+</body>
+</html>

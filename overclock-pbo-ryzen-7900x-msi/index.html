@@ -116,12 +116,14 @@
       <tr><th>Componente</th><th>Valor detectado</th><th>Estado</th></tr>
       <tr><td>Procesador</td><td><b>AMD Ryzen 9 7900X</b> · 12 núcleos / 24 hilos · Zen 4 (AM5)</td><td><span class="pill ok">OK para PBO</span></td></tr>
       <tr><td>Placa madre</td><td><b>MSI MAG B850 TOMAHAWK MAX WIFI</b> (MS-7E62)</td><td><span class="pill ok">Soporta PBO</span></td></tr>
-      <tr><td>BIOS</td><td>AMI ver. <b>2.A61</b> (06-jul-2026)</td><td><span class="pill ok">Actual</span></td></tr>
+      <tr><td>BIOS</td><td>AMI <code>E7E62AMS1.2A61</code> · build <b>08-jun-2026</b></td><td><span class="pill ok">Actual</span></td></tr>
       <tr><td>Enfriamiento</td><td><b>DeepCool LE360 V2</b> — líquido AIO 360&nbsp;mm</td><td><span class="pill ok">Ideal</span></td></tr>
       <tr><td>Fuente</td><td><b>DeepCool PX1200G</b> — 1200&nbsp;W · 80+ Gold</td><td><span class="pill ok">De sobra</span></td></tr>
-      <tr><td>RAM (EXPO)</td><td><b>DDR5-6000</b> ya activo (6000&nbsp;MHz)</td><td><span class="pill ok">Hecho</span></td></tr>
+      <tr><td>PBO actual</td><td><b>Auto</b> (sin overclock manual · sin Curve Optimizer)</td><td><span class="pill info">Sin tocar</span></td></tr>
+      <tr><td>RAM</td><td>Hoy en <b>DDR5-4800</b> (EXPO desactivado como prueba de estabilidad)</td><td><span class="pill warn">Ver nota</span></td></tr>
     </table>
-    <div class="note"><b>Lectura clara:</b> tienes el mejor escenario para PBO — buen cooler, fuente con margen enorme y la RAM ya optimizada. Este tutorial es el <b>siguiente escalón gratis</b> de rendimiento después del EXPO.</div>
+    <div class="note"><b>Lectura clara:</b> tienes el mejor escenario para PBO — buen cooler y fuente con margen enorme. Es el <b>siguiente escalón gratis</b> de rendimiento… pero después.</div>
+    <div class="warnbox"><b>⚠️ Ahora NO es el momento.</b> Estás en pleno diagnóstico de pantallazos azules y por eso bajaste la RAM a 4800. <b>Meter PBO/undervolt ahora ensuciaría la prueba</b> (si algo falla, no sabrías si es la RAM, el PBO o la fuente). Deja este tutorial para <b>cuando confirmes varios días sin BSOD</b> y el equipo esté estable. Un cambio a la vez.</div>
   </div>
 
   <!-- ============ ADVERTENCIAS ============ -->
@@ -161,11 +163,11 @@
 
   <!-- ============ PASO 2 ============ -->
   <h2><span class="n">Paso 2.</span> Activar PBO (Precision Boost Overdrive)</h2>
-  <p class="lead">En <b>OC</b>, baja hasta <b>CPU Features</b> (o <i>AMD Overclocking</i>) y busca <b>Precision Boost Overdrive</b>.</p>
+  <p class="lead">En tu Click BIOS X la ruta real es <b>OC → Advanced CPU Configuration → AMD Overclocking → Precision Boost Overdrive</b> (hoy en <code>Auto</code>). También hay un acceso rápido en <b>EZ Mode</b>.</p>
   <div class="step">
     <div class="bub">2</div>
     <div class="body">
-      <h3>OC → CPU Features → <b>Precision Boost Overdrive</b> → <code>Advanced</code></h3>
+      <h3>OC → Advanced CPU Configuration → AMD Overclocking → <b>Precision Boost Overdrive</b> → <code>Advanced</code></h3>
       <p>Al ponerlo en <b>Advanced</b> se despliegan más opciones. Configúralas así:</p>
       <div class="fig">
         <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
@@ -177,7 +179,7 @@
           <text x="212" y="33" fill="#0a0a00" font-size="13" font-weight="bold">Advanced (F7)</text>
           <g fill="#e2e600"><polygon points="8,58 22,72 8,86"/><polygon points="26,58 40,72 26,86"/><polygon points="44,58 58,72 44,86"/></g>
           <text x="905" y="29" fill="#cfd3da" font-size="12">Help (F1)</text>
-          <text x="176" y="80" fill="#e2e600" font-size="15" font-weight="bold">↰ OC › CPU Features › Precision Boost Overdrive</text>
+          <text x="176" y="80" fill="#e2e600" font-size="15" font-weight="bold">↰ OC › Advanced CPU Configuration › AMD Overclocking › PBO</text>
           <line x1="176" y1="90" x2="820" y2="90" stroke="#23252c"/>
           <!-- PBO (highlight) -->
           <rect x="166" y="102" width="654" height="30" rx="4" fill="rgba(226,230,0,0.14)" stroke="#e2e600" stroke-width="1.5"/>
@@ -208,7 +210,7 @@
           <text x="852" y="104" fill="#98a2b8" font-size="11">12-Core · AM5</text>
           <text x="852" y="132" fill="#98a2b8" font-size="11">Temp 50 °C</text>
         </svg>
-        <div class="cap"><b>OC → CPU Features → Precision Boost Overdrive</b> en Click BIOS X. <b>Valores de ejemplo</b> — los cambiaré por tu foto real cuando llegues a esta pantalla.</div>
+        <div class="cap"><b>OC → Advanced CPU Configuration → AMD Overclocking → Precision Boost Overdrive</b> en Click BIOS X. <b>Valores de ejemplo</b> — se cambian por tu foto real cuando llegues a esa pantalla.</div>
       </div>
       <div class="note"><b>Resumen del Paso 2:</b> <code>PBO = Advanced</code>, <code>PBO Limits = Motherboard</code>, <code>Max CPU Boost Clock Override = +100 MHz</code>. Lo demás en <code>Auto</code>. Ahora el undervolt, que es lo que más rinde.</div>
     </div>
@@ -231,7 +233,7 @@
           <text x="212" y="33" fill="#0a0a00" font-size="13" font-weight="bold">Advanced (F7)</text>
           <g fill="#e2e600"><polygon points="8,58 22,72 8,86"/><polygon points="26,58 40,72 26,86"/><polygon points="44,58 58,72 44,86"/></g>
           <text x="905" y="29" fill="#cfd3da" font-size="12">Help (F1)</text>
-          <text x="176" y="80" fill="#e2e600" font-size="15" font-weight="bold">↰ OC › CPU Features › Curve Optimizer</text>
+          <text x="176" y="80" fill="#e2e600" font-size="15" font-weight="bold">↰ OC › … › AMD Overclocking › PBO › Curve Optimizer</text>
           <line x1="176" y1="90" x2="820" y2="90" stroke="#23252c"/>
           <!-- Curve Optimizer -->
           <text x="186" y="126" fill="#e8ecf4" font-size="14">Curve Optimizer</text>
@@ -369,7 +371,7 @@
       <li><a href="https://www.msi.com/blog/amd-precision-boost-overdrive-pbo-guide">MSI — Guía de PBO en placas AMD</a></li>
       <li><a href="https://www.hwinfo.com/download/">HWiNFO64 — monitor de sensores (gratis)</a></li>
     </ul>
-    <p>Ilustraciones recreadas de la interfaz <b>MSI Click BIOS X</b> (tema MAG Arsenal Gaming). Los paneles de PBO/Curve Optimizer muestran <b>valores de ejemplo</b> y se actualizarán con fotos reales del equipo. Generado para <b>AMD Ryzen 9 7900X</b> + <b>MSI MAG B850 TOMAHAWK MAX WIFI</b> · BIOS 2.A61 · 20-ago-2026.</p>
+    <p>Ilustraciones recreadas de la interfaz <b>MSI Click BIOS X</b> (tema MAG Arsenal Gaming). Los paneles de PBO/Curve Optimizer muestran <b>valores de ejemplo</b> (aún no has entrado a esa pantalla, así que no hay foto real todavía). Generado para <b>AMD Ryzen 9 7900X</b> + <b>MSI MAG B850 TOMAHAWK MAX WIFI</b> · BIOS E7E62AMS1.2A61 (08-jun-2026) · ruta de menús corregida con tus fotos del 08-sep-2026.</p>
   </div>
 
 </div>
