@@ -109,7 +109,7 @@
       <tr><td>CPU</td><td><b>AMD Ryzen 9 7900X</b> · 12 núcleos / 24 hilos · Zen 4 · 4.70 GHz · CPUID <code>A60F12</code></td></tr>
       <tr><td>Memoria</td><td>2× Corsair <b>CMK48GX5M2E6000C36</b> = 48 GB (2×24) · slots <b>A2 + B2</b> (A1/B1 vacías) · UDIMM · PMIC Anpec</td></tr>
       <tr><td>Almacenamiento</td><td>M2_1 = <b>Predator GM9 2TB</b> (Ubuntu) · M2_2 = <b>Kingston SNVS1000G 1TB</b> (Windows) · + 2 HDD SATA de 1 TB (WD Green, Seagate)</td></tr>
-      <tr><td>Arranque</td><td><b>Dual-boot UEFI</b>: Windows Boot Manager (#1) · Ubuntu (#2)</td></tr>
+      <tr><td>Arranque</td><td><b>Dual-boot UEFI</b>: en las fotos Windows Boot Manager (#1) · Ubuntu (#2) → cambiado el 8-sep a <b>Ubuntu #1</b> desde Windows (ver tutorial <a href="../ubuntu-dual-boot-grub-reloj/">GRUB y reloj</a>)</td></tr>
     </table></div>
   </div>
 
@@ -124,7 +124,7 @@
       <tr><td><b>Activar PBO</b> (boost del CPU)</td><td class="path">OC › Advanced CPU Configuration › AMD Overclocking › <b>Precision Boost Overdrive</b></td><td>Hoy en <code>Auto</code></td></tr>
       <tr><td><b>Ver timings/voltaje de RAM</b></td><td class="path">OC › <b>Advanced DRAM Configuration</b></td><td>Todo en <code>Auto</code></td></tr>
       <tr><td><b>Ajustar voltajes</b> (SoC, DRAM, VDDIO)</td><td class="path">OC › (bajar a) <b>Voltage Setting</b></td><td>Todo en <code>Auto</code></td></tr>
-      <tr><td><b>Cambiar orden de arranque</b></td><td class="path">Boot › <b>Boot Option #1</b></td><td>Windows (#1) / Ubuntu (#2)</td></tr>
+      <tr><td><b>Cambiar orden de arranque</b></td><td class="path">Boot › <b>Boot Option #1</b></td><td>Poner <b>Ubuntu</b> como #1 para que salga GRUB (hoy: cambiado por software, fijar aquí si se revierte)</td></tr>
       <tr><td><b>Secure Boot / TPM</b></td><td class="path">Security › <b>Secure Boot</b> · Security › Trusted Computing</td><td>Secure Boot <code>Enabled</code> · fTPM <code>Enabled</code></td></tr>
       <tr><td><b>Re-Size BAR</b> (para la GPU)</td><td class="path">Advanced › PCIe Subsystem Settings › <b>Re-Size BAR Support</b></td><td>Hoy <code>Enabled</code></td></tr>
       <tr><td><b>Guardar un perfil de BIOS</b></td><td class="path"><kbd>F8</kbd> cargar / <kbd>F6</kbd> reset · <b>OC Profile</b></td><td>6 ranuras en ROM</td></tr>

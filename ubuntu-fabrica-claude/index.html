@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convertir Ubuntu en la Fábrica: Claude Code, memoria, skills y reporte al Monitor</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d2230; --line:#2a3142;
+    --y:#e2e600; --y2:#f2f24d; --txt:#e8ecf4; --mut:#98a2b8;
+    --ok:#2ec26a; --warn:#ffb020; --accent:#5aa9ff; --ub:#e95420; --cl:#d97757;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0a0c11,#0d0f14 300px);color:var(--txt);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 20px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(600px 200px at 50% -40px,rgba(217,119,87,.18),transparent)}
+  header .kick{color:var(--cl);font-weight:700;letter-spacing:2px;font-size:13px;text-transform:uppercase}
+  header h1{font-size:34px;margin:10px 0 6px;line-height:1.2}
+  header p{color:var(--mut);margin:0;font-size:16px}
+  h2{font-size:24px;margin:48px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--cl);font-variant-numeric:tabular-nums}
+  .lead{color:var(--mut);margin:4px 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
+  .tablewrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td b{color:#fff}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(46,194,106,.15);color:var(--ok)}
+  .pill.warn{background:rgba(255,176,32,.15);color:var(--warn)}
+  .pill.bad{background:rgba(228,0,43,.15);color:#ff5a72}
+  .pill.info{background:rgba(90,169,255,.15);color:var(--accent)}
+  .step{display:flex;gap:18px;margin:22px 0;align-items:flex-start}
+  .step .bub{flex:none;width:40px;height:40px;border-radius:50%;background:#14161b;border:2px solid var(--cl);
+    display:grid;place-items:center;font-weight:800;font-size:18px;color:var(--cl);box-shadow:0 0 0 4px rgba(217,119,87,.14)}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:6px 0 6px;font-size:18px}
+  .fig{background:#000;border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .fig svg{display:block;width:100%;height:auto}
+  .cap{font-size:13px;color:var(--mut);padding:8px 12px;border-top:1px solid var(--line);background:#0b0d12}
+  .note{border-left:3px solid var(--accent);background:rgba(90,169,255,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .warnbox{border-left:3px solid var(--warn);background:rgba(255,176,32,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .okbox{border-left:3px solid var(--ok);background:rgba(46,194,106,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .badbox{border-left:3px solid #e4002b;background:rgba(228,0,43,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  kbd{background:#0b0d12;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:2px 8px;font-family:Consolas,monospace;font-size:13px;color:#fff}
+  code{background:#0b0d12;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#ffe066}
+  pre{background:#0b0d12;border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;font-family:Consolas,monospace;font-size:13px;line-height:1.5;color:#e8ecf4;margin:12px 0}
+  pre code{background:none;border:0;padding:0;color:#ffe066}
+  a{color:var(--accent)}
+  ul{padding-left:20px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .toc a{background:#0b0d12;border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:13px;text-decoration:none;color:var(--txt)}
+  .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .dl{display:inline-block;background:#0b0d12;border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:6px 6px 0 0;text-decoration:none;color:#fff;font-size:14px}
+  .dl:hover{border-color:var(--cl)}
+
+  /* ====== Responsivo: iPhone 15 Pro Max / iPad ====== */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  .card,.note,.warnbox,.okbox,.badbox,.step .body{overflow-wrap:break-word}
+  .pill{white-space:nowrap}
+  th{white-space:nowrap}
+  @media (max-width:640px){
+    header{padding:38px 16px 26px}
+    header h1{font-size:22px}
+    header p{font-size:14px}
+    header .kick{font-size:11px;letter-spacing:1.5px}
+    .wrap{padding:0 14px 60px}
+    h2{font-size:19px;margin:34px 0 4px}
+    .lead{font-size:14px;margin-bottom:16px}
+    .card{padding:15px 15px}
+    table{font-size:13px}
+    th,td{padding:8px 8px}
+    .step{display:block;margin:22px 0}
+    .step .bub{width:30px;height:30px;font-size:14px;margin:0 0 10px 0}
+    .step .body{width:100%}
+    .step h3{font-size:16px}
+    .fig{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .fig svg{min-width:640px}
+    .cap{font-size:12px;padding:7px 10px}
+    kbd{padding:1px 6px;font-size:12px}
+    code{font-size:12px}
+    pre{font-size:12px}
+    .foot{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">Ubuntu 24.04 · Claude Code · Fábrica de Software con Agentes</div>
+  <h1>Convertir Ubuntu en la Fábrica</h1>
+  <p>Cómo le dices a Claude, recién instalado en Ubuntu, <b>quién es, para quién trabaja y a quién le reporta</b> · 20 minutos + tus secretos</p>
+</header>
+
+<div class="wrap">
+
+  <div class="note" style="margin-top:24px">
+    <b>La pregunta que responde esta guía:</b> "ya entré a Ubuntu… ¿cómo le digo a Claude que esta máquina es la fábrica, que el centro de operaciones es la Mac y que debe reportar al Monitor?". Respuesta corta: <b>Claude no adivina nada; lee tres cosas al arrancar</b>: un archivo de identidad (<code>~/.claude/CLAUDE.md</code>), su memoria (<code>~/.claude/projects/…/memory/</code>) y un hook de inicio (<code>SessionStart</code>). Esta guía deja las tres puestas con un solo script.
+    <div class="toc">
+      <a href="#mapa">🗺️ Quién es quién</a>
+      <a href="#que-lee">📖 Qué lee Claude</a>
+      <a href="#pasos">🐧 Pasos en Ubuntu</a>
+      <a href="#secretos">🔐 Tus secretos</a>
+      <a href="#verificar">✅ Verificar</a>
+      <a href="#limites">⚠️ Límites</a>
+      <a href="#archivos">⬇️ Archivos</a>
+    </div>
+  </div>
+
+  <!-- ============ MAPA ============ -->
+  <h2 id="mapa"><span class="n">1 ·</span> Quién es quién en tu sistema</h2>
+  <p class="lead">Tres máquinas, tres papeles. Ubuntu no manda: <b>trabaja</b>. Y no guarda el registro: <b>lo publica</b>.</p>
+  <div class="fig">
+    <svg viewBox="0 0 800 330" xmlns="http://www.w3.org/2000/svg">
+      <rect width="800" height="330" fill="#000"/>
+      <!-- Mac -->
+      <rect x="30" y="40" width="220" height="120" rx="12" fill="#161a22" stroke="#5aa9ff" stroke-width="2"/>
+      <text x="140" y="70" fill="#5aa9ff" font-size="15" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial">MAC · CEO</text>
+      <text x="140" y="95" fill="#e8ecf4" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">Centro de operaciones</text>
+      <text x="140" y="115" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">manda por SSH (Tailscale)</text>
+      <text x="140" y="135" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">Linear · Notion · da el GO</text>
+      <!-- Ubuntu -->
+      <rect x="290" y="40" width="220" height="120" rx="12" fill="#161a22" stroke="#e95420" stroke-width="2"/>
+      <text x="400" y="70" fill="#e95420" font-size="15" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial">PC EN UBUNTU · FÁBRICA</text>
+      <text x="400" y="95" fill="#e8ecf4" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">obreros 24/7 (Docker / Incus)</text>
+      <text x="400" y="115" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">Claude Code por suscripción</text>
+      <text x="400" y="135" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">RTX 5070 Ti · repos en /mnt/c</text>
+      <!-- Windows -->
+      <rect x="550" y="40" width="220" height="120" rx="12" fill="#161a22" stroke="#2a3142" stroke-width="2"/>
+      <text x="660" y="70" fill="#98a2b8" font-size="15" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial">MISMA PC EN WINDOWS</text>
+      <text x="660" y="95" fill="#e8ecf4" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">dual-boot: cuando arranca uno,</text>
+      <text x="660" y="115" fill="#e8ecf4" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">el otro está APAGADO</text>
+      <text x="660" y="135" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">su disco C: se monta en Ubuntu</text>
+      <!-- Monitor -->
+      <rect x="200" y="220" width="400" height="80" rx="12" fill="#161a22" stroke="#2ec26a" stroke-width="2"/>
+      <text x="400" y="250" fill="#2ec26a" font-size="15" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial">MONITOR WESOFT (en la nube)</text>
+      <text x="400" y="272" fill="#e8ecf4" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">"Tareas Diarias" cifradas · Bandeja del CEO · avisos Telegram</text>
+      <text x="400" y="290" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">no depende de ninguna máquina encendida</text>
+      <!-- flechas -->
+      <path d="M140 160 L140 200 L200 240" stroke="#5aa9ff" stroke-width="2" fill="none"/>
+      <path d="M400 160 L400 218" stroke="#e95420" stroke-width="2" fill="none"/><path d="M392 210 L400 220 L408 210 Z" fill="#e95420"/>
+      <path d="M660 160 L660 200 L600 240" stroke="#98a2b8" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+      <text x="470" y="195" fill="#e95420" font-size="12" font-family="Segoe UI,Arial">/cierre + hook SessionStart</text>
+      <path d="M250 100 L288 100" stroke="#5aa9ff" stroke-width="2"/><path d="M282 94 L292 100 L282 106 Z" fill="#5aa9ff"/>
+    </svg>
+    <div class="cap">Los tres "padres" (Mac, Ubuntu, Windows) alimentan el mismo Monitor en la nube. Por eso el Monitor <b>no</b> se instala en Ubuntu: Ubuntu solo aprende a <b>publicar</b> en él.</div>
+  </div>
+
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Rol</th><th>Quién</th><th>Qué hace / qué NO hace</th></tr>
+      <tr><td><b>CEO</b></td><td>Tú, desde la Mac</td><td>Decide y da el <b>GO</b> para mergear. No ejecuta git.</td></tr>
+      <tr><td><b>Orquestador</b></td><td>Claude en la Mac (control plane)</td><td>Reparte tareas y ramas leyendo Linear/Notion. No programa ni aprueba.</td></tr>
+      <tr><td><b>Obreros</b></td><td>Contenedores en Ubuntu</td><td>Consola partida: <i>Ejecutor</i> planea, construye y prueba; <i>Auditor</i> revisa plan y código.</td></tr>
+      <tr><td><b>Mergeador</b></td><td>Claude "tonto" a propósito</td><td>Solo ejecuta el merge ya aprobado. Sin GO, no toca <code>main</code>.</td></tr>
+      <tr><td><b>Monitor</b></td><td>Nube</td><td>Registro de puntos de regreso y bandeja de escaladas. Lo escribe <b>solo</b> el skill <code>/cierre</code>.</td></tr>
+    </table></div>
+  </div>
+
+  <!-- ============ QUÉ LEE ============ -->
+  <h2 id="que-lee"><span class="n">2 ·</span> Qué lee Claude al arrancar (y por eso "sabe" que es la fábrica)</h2>
+  <p class="lead">Nada de esto es magia ni se le "dice en el chat" cada vez. Son archivos que Claude Code carga solo en cada sesión.</p>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Archivo</th><th>Para qué</th><th>Quién lo pone</th></tr>
+      <tr><td><code>~/.claude/CLAUDE.md</code></td><td><b>Identidad y reglas de la máquina</b>: "eres la Fábrica; el centro es la Mac; reportas al Monitor así; modelo Opus 4.8; sin API keys; respalda antes de cambiar; verifica el efecto".</td><td>script 02 (copia <code>CLAUDE-fabrica-ubuntu.md</code>)</td></tr>
+      <tr><td><code>~/.claude/projects/-home-USUARIO/memory/*.md</code></td><td><b>Memoria</b>: todo lo aprendido en Windows (fábrica, Monitor, GPU, trampas). Un archivo por hecho + índice <code>MEMORY.md</code>.</td><td>script 02 (copia la carpeta de Windows)</td></tr>
+      <tr><td><code>~/.claude/skills/*</code></td><td><b>Skills</b>: <code>fabrica-agentes</code> (levantar obreros), <code>cierre</code> (publicar al Monitor), etc.</td><td>script 02 (copia las de Windows + instala <code>cierre</code> portable)</td></tr>
+      <tr><td><code>~/.claude/settings.json</code></td><td>Modelo fijo <code>claude-opus-4-8[1m]</code> con doble candado (<code>model</code> + <code>env.ANTHROPIC_MODEL</code>) y el hook <code>SessionStart</code>.</td><td>script 02 + <code>instalar-padre.sh</code></td></tr>
+      <tr><td><code>~/.claude/.credentials.json</code></td><td>Tu sesión de <b>suscripción</b> (copiada de Windows). Sin esto Claude pide login en el navegador.</td><td>script 02</td></tr>
+      <tr><td><code>~/.bashrc</code> (bloque <i>monitor-wesoft</i>)</td><td>URL del Monitor y los <b>3 secretos</b> para publicar cifrado.</td><td><code>instalar-padre.sh</code> deja el bloque; <b>tú</b> rellenas los secretos</td></tr>
+    </table></div>
+    <div class="note"><b>Dónde queda la memoria:</b> Claude Code guarda la memoria <b>por carpeta de proyecto</b>. La carpeta "home" de Ubuntu (<code>/home/USUARIO</code>) se codifica como <code>-home-USUARIO</code>. El script calcula ese nombre solo; no lo escribas a mano.</div>
+  </div>
+
+  <!-- ============ PASOS ============ -->
+  <h2 id="pasos"><span class="n">3 ·</span> Pasos dentro de Ubuntu</h2>
+  <p class="lead">Requisito: ya arrancas Ubuntu desde GRUB (si no, primero la guía <a href="../ubuntu-dual-boot-grub-reloj/">Dual-boot: GRUB y reloj</a>). Abre una terminal con <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd>.</p>
+
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Montar el disco de Windows (C:) en <code>/mnt/c</code></h3>
+      <p>Todo lo que Ubuntu necesita (credenciales, memoria, skills, el repo de conocimiento, tus repos) <b>ya está en el disco de Windows</b>. No se copia nada a mano: se monta y se lee de ahí.</p>
+      <pre><code>sudo mkdir -p /mnt/c &amp;&amp; sudo mount -t ntfs3 -o uid=$(id -u),gid=$(id -g) /dev/nvme0n1p2 /mnt/c</code></pre>
+      <ul>
+        <li><code>ntfs3</code> es el driver NTFS que trae el kernel de Ubuntu 24.04 (lee y escribe).</li>
+        <li><code>uid/gid</code> hace que los archivos aparezcan como tuyos (si no, todo sale como <i>root</i>).</li>
+        <li>Si falla: C: puede ser <code>/dev/nvme1n1p2</code>. Míralo con <code>lsblk -o NAME,SIZE,FSTYPE,LABEL</code>: C: es la partición NTFS de <b>1.88 TB</b>.</li>
+      </ul>
+      <div class="warnbox"><b>Si dice "volume is dirty" o no monta:</b> Windows quedó hibernado (Inicio rápido). Arranca Windows, apágalo del todo (no reinicio) y vuelve. En tu PC el Inicio rápido ya está apagado.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>Correr el script de primer arranque</h3>
+      <pre><code>bash /mnt/c/tmp/arranque-ubuntu/02-primer-arranque-claude.sh</code></pre>
+      <p>Es <b>idempotente</b> (se puede repetir sin romper nada: solo copia lo que falta) y <b>nunca pide ni imprime secretos</b>. En orden:</p>
+      <div class="tablewrap"><table>
+        <tr><th>#</th><th>Hace</th><th>Cómo lo ves</th></tr>
+        <tr><td>1</td><td>Encuentra el disco de Windows (busca <code>Users/rgarc/.claude</code> en <code>/mnt/c</code> o <code>/media/…</code>)</td><td><code>✓ Windows en: /mnt/c</code></td></tr>
+        <tr><td>2</td><td>Instala Node 22 si falta (necesita <code>sudo</code>) y Claude Code (instalador oficial, en <code>~/.local/bin</code>)</td><td><code>✓ node v22…</code> · <code>✓ claude …</code></td></tr>
+        <tr><td>3</td><td>Copia tu sesión de suscripción (<code>.credentials.json</code>) con permisos 600</td><td><code>✓ credenciales de suscripción copiadas</code></td></tr>
+        <tr><td>4</td><td>Siembra <code>~/.claude.json</code> para saltar el asistente de tema y el diálogo "¿confías en esta carpeta?"</td><td><code>✓ ~/.claude.json sembrado</code></td></tr>
+        <tr><td>5</td><td>Crea <code>settings.json</code> con Opus 4.8 [1m] fijo (doble candado)</td><td><code>✓ settings.json creado</code></td></tr>
+        <tr><td>6</td><td>Instala el <code>CLAUDE.md</code> de la Fábrica (respalda el anterior si había)</td><td><code>✓ ~/.claude/CLAUDE.md = identidad de la Fábrica</code></td></tr>
+        <tr><td>7</td><td>Copia la memoria de Windows (72 archivos) a la memoria del home de Ubuntu</td><td><code>✓ memoria: N archivos nuevos</code></td></tr>
+        <tr><td>8</td><td>Copia las skills de Windows que falten</td><td><code>✓ skills: N copiadas</code></td></tr>
+        <tr><td>9</td><td>Convierte Ubuntu en "padre" del Monitor: corre <code>instalar-padre.sh</code> (hook SessionStart + skill <code>/cierre</code> + bloque en <code>~/.bashrc</code>)</td><td><code>✓ hook SessionStart registrado</code></td></tr>
+      </table></div>
+      <p>Al final imprime la lista de lo que <b>te toca a ti</b> (los secretos) y la ruta del log: <code>~/primer-arranque-fabrica-FECHA.log</code>.</p>
+    </div>
+  </div>
+
+  <div class="step" id="secretos">
+    <div class="bub">3</div>
+    <div class="body">
+      <h3>Rellenar tus tres secretos (solo tú)</h3>
+      <p>El script deja en <code>~/.bashrc</code> un bloque entre <code>&gt;&gt;&gt; monitor-wesoft &gt;&gt;&gt;</code> y <code>&lt;&lt;&lt; monitor-wesoft &lt;&lt;&lt;</code> con las variables <b>vacías</b>. Ábrelo con <code>nano ~/.bashrc</code> y rellena:</p>
+      <div class="tablewrap"><table>
+        <tr><th>Variable</th><th>De dónde sale</th></tr>
+        <tr><td><code>CF_ACCESS_CLIENT_ID</code> / <code>CF_ACCESS_CLIENT_SECRET</code></td><td>Cloudflare Zero Trust → <i>Credenciales de servicio</i> → crear token <b>monitor-ubuntu</b> y autorizarlo en la política <i>Maquinas</i> (igual que hiciste con <i>monitor-mac</i>).</td></tr>
+        <tr><td><code>MONITOR_SECRETS_PASSPHRASE</code></td><td>La misma frase que usan Windows y la Mac: es la llave del cifrado extremo a extremo de "Tareas Diarias". Sin ella, Ubuntu no puede leer ni escribir puntos de regreso.</td></tr>
+      </table></div>
+      <p>Guarda (<kbd>Ctrl</kbd>+<kbd>O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl</kbd>+<kbd>X</kbd>) y abre una <b>terminal nueva</b> para que carguen.</p>
+      <div class="badbox"><b>Nunca</b> pegues estos valores en un chat con Claude ni los metas en el repo de conocimiento. Claude los usa desde el entorno; no necesita verlos.</div>
+    </div>
+  </div>
+
+  <!-- ============ VERIFICAR ============ -->
+  <h2 id="verificar"><span class="n">4 ·</span> Verificar el efecto (no solo que los archivos existan)</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Prueba</th><th>Comando</th><th>Debe pasar</th></tr>
+      <tr><td>Claude abre logueado y con el modelo correcto</td><td><code>claude</code></td><td>Entra al prompt <b>sin pedir login</b> y la barra dice <b>Opus 4.8 (1M)</b></td></tr>
+      <tr><td>Claude sabe quién es</td><td>en el prompt: <i>"¿qué máquina eres y a quién le reportas?"</i></td><td>Responde: la Fábrica; centro = Mac; reporta al Monitor vía <code>/cierre</code></td></tr>
+      <tr><td>Memoria cargada</td><td><i>"¿qué sabes de la fábrica de obreros?"</i></td><td>Cita roles, Docker por suscripción, consola partida</td></tr>
+      <tr><td>Padre del Monitor configurado</td><td><code>node ~/.monitor-hooks/sessionstart-pendientes.mjs --check</code></td><td>Sin errores de variables vacías</td></tr>
+      <tr><td>Publicar funciona</td><td>en un proyecto: <code>/cierre</code></td><td>Termina con <b>"publicado CIFRADO"</b></td></tr>
+      <tr><td>Leer funciona</td><td>cerrar y abrir <code>claude</code> en el mismo proyecto</td><td>El hook <code>SessionStart</code> inyecta el punto de regreso recién publicado</td></tr>
+    </table></div>
+    <div class="okbox"><b>Con esas seis pruebas en verde, Ubuntu ya es un padre del Monitor y Claude ya "sabe" que es la Fábrica.</b> Lo siguiente es levantar obreros con el skill <code>fabrica-agentes</code> (<code>spawn-obrero.sh N</code>), que es otra guía.</div>
+  </div>
+
+  <!-- ============ LÍMITES ============ -->
+  <h2 id="limites"><span class="n">5 ·</span> Límites y avisos honestos</h2>
+  <div class="card">
+    <ul>
+      <li><b>La partición de Ubuntu quedó de 24 GB</b> (se pidieron 250–400). Alcanza para arrancar, Claude y pruebas; <b>no</b> para imágenes Docker/Incus con varios obreros. Antes de escalar: encoger C: y ampliar/mover la partición con GParted desde el USB de instalación, o montar <code>/var/lib/docker</code> en otra partición.</li>
+      <li><b>Dual-boot = uno solo encendido.</b> Mientras Ubuntu trabaja, todo lo que vive en Windows (tareas programadas, vigías, mineros) está apagado. Lo que deba ser 24/7 tiene que migrar a Ubuntu (unit <code>systemd</code>) o a la nube; el Monitor ya está en la nube.</li>
+      <li><b>GPU:</b> la RTX 5070 Ti necesita el driver <code>nvidia-driver-580-open</code>. Los pantallazos de Windows son de plataforma (fuente/EXPO) y en Linux reaparecerían como <code>Xid 79</code>: no es "bug de Ubuntu".</li>
+      <li><b>Repos con enlaces:</b> las academias usan 43 <i>junctions</i> de Windows hacia D:/F:. En Ubuntu hay que montar esas unidades y recrearlos como <i>symlinks</i> (los videos no se mueven). Pendiente.</li>
+      <li><b>Rutas dentro de las skills:</b> vienen con <code>C:\…</code>; el <code>CLAUDE.md</code> le dice a Claude que las traduzca a <code>/mnt/c/…</code>.</li>
+    </ul>
+  </div>
+
+  <!-- ============ ARCHIVOS ============ -->
+  <h2 id="archivos"><span class="n">⬇️</span> Archivos del paquete</h2>
+  <p class="lead">Están en esta carpeta del repositorio. En tu PC: <code>C:\tmp\arranque-ubuntu\</code> y en el repo de conocimiento <code>Ubuntu/02-primer-arranque-fabrica/</code>.</p>
+  <div class="card">
+    <a class="dl" href="./scripts/02-primer-arranque-claude.sh">🐧 02-primer-arranque-claude.sh</a>
+    <a class="dl" href="./scripts/CLAUDE-fabrica-ubuntu.md">🧠 CLAUDE-fabrica-ubuntu.md</a>
+    <a class="dl" href="./scripts/01-arreglar-grub.sh">🐧 01-arreglar-grub.sh</a>
+    <a class="dl" href="./scripts/LEEME.md">📄 LEEME.md</a>
+    <div class="note" style="margin-top:14px"><b>El archivo que más importa es <code>CLAUDE-fabrica-ubuntu.md</code>.</b> Es la "carta de presentación" que Claude lee en cada sesión. Si un día cambia el papel de la máquina (por ejemplo, deja de ser fábrica y pasa a ser servidor de videos), se edita ese archivo y listo: no hay que reinstalar nada.</div>
+  </div>
+
+  <div class="foot">
+    Tutorial escrito el 8-sep-2026 · Guía previa: <a href="../ubuntu-dual-boot-grub-reloj/">Dual-boot: GRUB y reloj</a> · <a href="../">← Volver al índice</a>
+  </div>
+</div>
+</body>
+</html>

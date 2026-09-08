@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dual-boot Ubuntu + Windows: por qué no sale GRUB y por qué el reloj se atrasa 6 h</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d2230; --line:#2a3142;
+    --y:#e2e600; --y2:#f2f24d; --ydim:#8a8b00; --txt:#e8ecf4; --mut:#98a2b8;
+    --ok:#2ec26a; --warn:#ffb020; --accent:#5aa9ff; --ub:#e95420; --grub:#5b2c6f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0a0c11,#0d0f14 300px);color:var(--txt);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 20px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(600px 200px at 50% -40px,rgba(233,84,32,.18),transparent)}
+  header .kick{color:var(--ub);font-weight:700;letter-spacing:2px;font-size:13px;text-transform:uppercase}
+  header h1{font-size:34px;margin:10px 0 6px;line-height:1.2}
+  header p{color:var(--mut);margin:0;font-size:16px}
+  h2{font-size:24px;margin:48px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--ub);font-variant-numeric:tabular-nums}
+  .lead{color:var(--mut);margin:4px 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
+  .tablewrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td b{color:#fff}
+  .path{font-family:Consolas,monospace;font-size:13px;color:var(--y2)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(46,194,106,.15);color:var(--ok)}
+  .pill.warn{background:rgba(255,176,32,.15);color:var(--warn)}
+  .pill.bad{background:rgba(228,0,43,.15);color:#ff5a72}
+  .pill.info{background:rgba(90,169,255,.15);color:var(--accent)}
+  .step{display:flex;gap:18px;margin:22px 0;align-items:flex-start}
+  .step .bub{flex:none;width:40px;height:40px;border-radius:50%;background:#14161b;border:2px solid var(--ub);
+    display:grid;place-items:center;font-weight:800;font-size:18px;color:var(--ub);box-shadow:0 0 0 4px rgba(233,84,32,.14)}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:6px 0 6px;font-size:18px}
+  .fig{background:#000;border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .fig svg{display:block;width:100%;height:auto}
+  .cap{font-size:13px;color:var(--mut);padding:8px 12px;border-top:1px solid var(--line);background:#0b0d12}
+  .note{border-left:3px solid var(--accent);background:rgba(90,169,255,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .warnbox{border-left:3px solid var(--warn);background:rgba(255,176,32,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .okbox{border-left:3px solid var(--ok);background:rgba(46,194,106,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .badbox{border-left:3px solid #e4002b;background:rgba(228,0,43,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  kbd{background:#0b0d12;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:2px 8px;font-family:Consolas,monospace;font-size:13px;color:#fff}
+  code{background:#0b0d12;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#ffe066}
+  pre{background:#0b0d12;border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;font-family:Consolas,monospace;font-size:13px;line-height:1.5;color:#e8ecf4;margin:12px 0}
+  pre code{background:none;border:0;padding:0;color:#ffe066}
+  a{color:var(--accent)}
+  ul{padding-left:20px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .toc a{background:#0b0d12;border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:13px;text-decoration:none;color:var(--txt)}
+  .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .dl{display:inline-block;background:#0b0d12;border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:6px 6px 0 0;text-decoration:none;color:#fff;font-size:14px}
+  .dl:hover{border-color:var(--ub)}
+
+  /* ====== Responsivo: iPhone 15 Pro Max / iPad ====== */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  .card,.note,.warnbox,.okbox,.badbox,.step .body{overflow-wrap:break-word}
+  .pill{white-space:nowrap}
+  th{white-space:nowrap}
+  @media (max-width:640px){
+    header{padding:38px 16px 26px}
+    header h1{font-size:22px}
+    header p{font-size:14px}
+    header .kick{font-size:11px;letter-spacing:1.5px}
+    .wrap{padding:0 14px 60px}
+    h2{font-size:19px;margin:34px 0 4px}
+    .lead{font-size:14px;margin-bottom:16px}
+    .card{padding:15px 15px}
+    table{font-size:13px}
+    th,td{padding:8px 8px}
+    .step{display:block;margin:22px 0}
+    .step .bub{width:30px;height:30px;font-size:14px;margin:0 0 10px 0}
+    .step .body{width:100%}
+    .step h3{font-size:16px}
+    .fig{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .fig svg{min-width:640px}
+    .cap{font-size:12px;padding:7px 10px}
+    kbd{padding:1px 6px;font-size:12px}
+    code{font-size:12px}
+    pre{font-size:12px}
+    .foot{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">Ubuntu 24.04 + Windows 11 · MSI Click BIOS X · UEFI</div>
+  <h1>Dual-boot: por qué no sale GRUB y por qué el reloj se atrasa 6 horas</h1>
+  <p>Los dos problemas clásicos de un dual-boot recién instalado, con lo que pasó en <b>tu PC</b> y cómo se arregla · 15 minutos</p>
+</header>
+
+<div class="wrap">
+
+  <div class="note" style="margin-top:24px">
+    <b>Qué vas a resolver aquí:</b> instalaste Ubuntu junto a Windows y (1) al encender <b>entra directo a Windows</b>, sin el menú morado de GRUB para elegir; (2) al volver a Windows <b>el reloj está mal por 6 horas</b>. Son dos problemas independientes, cada uno con su causa y su arreglo.
+    <div class="toc">
+      <a href="#equipo">🖥️ Tu equipo</a>
+      <a href="#grub">💾 A · GRUB no aparece</a>
+      <a href="#bios">🎛️ Fix duradero en BIOS</a>
+      <a href="#menu">📋 GRUB sin menú</a>
+      <a href="#reloj">🕒 B · Reloj 6 h</a>
+      <a href="#faq">❓ Dudas</a>
+      <a href="#scripts">⬇️ Scripts</a>
+    </div>
+  </div>
+
+  <!-- ============ EQUIPO ============ -->
+  <div class="card" id="equipo">
+    <h2 style="border:0;margin:0 0 10px;padding:0">🖥️ Tu equipo (leído en vivo, 8-sep-2026)</h2>
+    <div class="tablewrap"><table>
+      <tr><th>Cosa</th><th>Valor detectado</th><th>Estado</th></tr>
+      <tr><td>Placa / BIOS</td><td><b>MSI MAG B850 TOMAHAWK MAX WIFI</b> · Click BIOS X · modo <code>UEFI</code> · Secure Boot <code>Enabled</code></td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>Disco de Windows</td><td>Predator GM9 2 TB (M2_1) · partición <b>p2 = C:</b> (1.88 TB)</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>Disco de Ubuntu</td><td>Mismo Predator · partición <b>p5 = Ubuntu</b> (ext4) · ESP nueva en p4</td><td><span class="pill warn">solo 24 GB</span></td></tr>
+      <tr><td>Windows Boot Manager</td><td><code>\EFI\Microsoft\Boot\bootmgfw.efi</code> en la ESP del <b>Kingston (M2_2)</b></td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>GRUB (shim de Ubuntu)</td><td><code>\EFI\ubuntu\shimx64.efi</code> · entrada UEFI <b>"Ubuntu"</b> registrada</td><td><span class="pill ok">instalado</span></td></tr>
+      <tr><td>Orden UEFI al revisar</td><td><b>Windows Boot Manager #1</b> · Ubuntu #2 (se había revertido solo)</td><td><span class="pill bad">causa del problema</span></td></tr>
+      <tr><td>Reloj de Windows</td><td><b>02:01</b> cuando en internet eran las <b>08:01</b> → 6 h atrasado · servicio de hora <b>parado</b></td><td><span class="pill bad">causa del problema</span></td></tr>
+    </table></div>
+    <div class="okbox"><b>Resumen en una frase:</b> GRUB <b>sí está instalado</b> y Ubuntu <b>sí está en el disco</b>. Lo único que falla es <b>quién arranca primero</b> (la placa elige Windows) y <b>cómo interpreta Windows la hora del chip del reloj</b>.</div>
+  </div>
+
+  <!-- ============ A. GRUB ============ -->
+  <h2 id="grub"><span class="n">A ·</span> "No aparece el bootloader de Ubuntu"</h2>
+  <p class="lead">La placa (firmware UEFI) tiene una <b>lista de arrancadores</b> en su memoria NVRAM. Arranca el <b>primero de la lista</b> y ya. Si el primero es Windows Boot Manager, jamás verás GRUB, aunque esté perfectamente instalado.</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="800" height="260" fill="#000"/>
+      <text x="30" y="40" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">Lista de arranque de la placa (NVRAM UEFI)</text>
+      <!-- lista mala -->
+      <rect x="30" y="60" width="340" height="170" rx="10" fill="#161a22" stroke="#2a3142"/>
+      <text x="50" y="88" fill="#ff5a72" font-size="13" font-weight="700" font-family="Segoe UI,Arial">ANTES (lo que tenías)</text>
+      <rect x="50" y="102" width="300" height="34" rx="6" fill="#1d2230" stroke="#ff5a72"/>
+      <text x="62" y="124" fill="#fff" font-size="14" font-family="Segoe UI,Arial">#1  Windows Boot Manager</text>
+      <rect x="50" y="146" width="300" height="34" rx="6" fill="#1d2230" stroke="#2a3142"/>
+      <text x="62" y="168" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">#2  Ubuntu (GRUB)</text>
+      <text x="50" y="212" fill="#98a2b8" font-size="12" font-family="Segoe UI,Arial">→ entra directo a Windows, sin menú</text>
+      <!-- flecha -->
+      <path d="M385 145 L415 145" stroke="#e2e600" stroke-width="3"/>
+      <path d="M412 137 L424 145 L412 153 Z" fill="#e2e600"/>
+      <!-- lista buena -->
+      <rect x="430" y="60" width="340" height="170" rx="10" fill="#161a22" stroke="#2a3142"/>
+      <text x="450" y="88" fill="#2ec26a" font-size="13" font-weight="700" font-family="Segoe UI,Arial">DESPUÉS (lo que necesitas)</text>
+      <rect x="450" y="102" width="300" height="34" rx="6" fill="#1d2230" stroke="#2ec26a"/>
+      <text x="462" y="124" fill="#fff" font-size="14" font-family="Segoe UI,Arial">#1  Ubuntu (GRUB)</text>
+      <rect x="450" y="146" width="300" height="34" rx="6" fill="#1d2230" stroke="#2a3142"/>
+      <text x="462" y="168" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">#2  Windows Boot Manager</text>
+      <text x="450" y="212" fill="#98a2b8" font-size="12" font-family="Segoe UI,Arial">→ sale el menú de GRUB con Ubuntu y Windows</text>
+    </svg>
+    <div class="cap">GRUB solo se ve si es el <b>#1</b>. Desde el menú de GRUB puedes elegir Windows; al revés no.</div>
+  </div>
+
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Arreglo rápido desde Windows (sin entrar a la BIOS)</h3>
+      <p>Windows puede reordenar esa lista con la herramienta <code>bcdedit</code>, pero solo <b>como administrador</b>. El script <code>fijar-grub.ps1</code> (abajo en <a href="#scripts">Scripts</a>) hace tres cosas y deja un log con el antes y el después:</p>
+      <ul>
+        <li>Lee la lista y busca la entrada que se llama <b>"Ubuntu"</b> (su identificador es un número largo entre llaves, distinto en cada PC; por eso el script lo <b>busca por nombre</b> en vez de tenerlo escrito a mano).</li>
+        <li>La pone <b>al frente</b> de la lista: <code>bcdedit /set {fwbootmgr} displayorder {ubuntu} /addfirst</code>. El <code>/addfirst</code> importa: mueve Ubuntu al #1 <b>sin borrar</b> las demás entradas.</li>
+        <li>Fuerza que el <b>siguiente arranque</b> vaya a GRUB pase lo que pase: <code>bcdedit /set {fwbootmgr} bootsequence {ubuntu}</code> (es de un solo uso).</li>
+      </ul>
+      <pre><code>powershell -ExecutionPolicy Bypass -File "C:\tmp\arranque-ubuntu\fijar-grub.ps1"</code></pre>
+      <p>Al correrlo, Windows pide permiso (ventana azul de UAC) → <b>Sí</b>. El log queda en <code>C:\tmp\arranque-ubuntu\fijar-grub-FECHA.log</code>; al final debe decir <code>RESULTADO: OK</code> y la lista <i>DESPUÉS</i> con Ubuntu arriba.</p>
+      <div class="warnbox"><b>Lo que pasó en tu PC:</b> este arreglo se aplicó el 7-sep y <b>al día siguiente la placa lo había revertido</b> (Windows otra vez #1). Se volvió a aplicar el 8-sep. Es normal en placas MSI: cada cierto arranque el firmware "reconstruye" la lista y pone Windows primero. Por eso el arreglo duradero es el <b>paso 2</b>.</div>
+    </div>
+  </div>
+
+  <div class="step" id="bios">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>Arreglo duradero: en la BIOS, poner Ubuntu como Boot Option #1</h3>
+      <p>Reinicia, toca <kbd>Supr</kbd> en el logo MSI, pulsa <kbd>F7</kbd> (Advanced Mode) y entra a <b>Settings › Boot</b>. Tus dos arrancadores están en <b>discos distintos</b> (Windows en el Kingston M2_2, Ubuntu en el Predator M2_1), así que el cambio va en la lista principal, no en las sub-prioridades:</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="360" fill="#000"/>
+          <g opacity="0.10" fill="#e2e600"><polygon points="0,0 140,0 0,140"/><polygon points="800,360 660,360 800,220"/></g>
+          <rect x="0" y="0" width="800" height="46" fill="#111"/>
+          <text x="24" y="30" fill="#e2e600" font-size="16" font-weight="700" font-family="Segoe UI,Arial">MSI CLICK BIOS X</text>
+          <text x="230" y="30" fill="#98a2b8" font-size="13" font-family="Segoe UI,Arial">MAG B850 TOMAHAWK MAX WIFI · Advanced Mode (F7)</text>
+          <!-- menú lateral -->
+          <rect x="0" y="46" width="170" height="314" fill="#0b0b0b"/>
+          <text x="20" y="84" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">System Status</text>
+          <text x="20" y="114" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">Advanced</text>
+          <text x="20" y="144" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">Overclocking</text>
+          <text x="20" y="174" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">Security</text>
+          <rect x="0" y="190" width="170" height="30" fill="#e2e600"/>
+          <text x="20" y="211" fill="#000" font-size="14" font-weight="700" font-family="Segoe UI,Arial">Boot</text>
+          <text x="20" y="250" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">Save &amp; Exit</text>
+          <!-- panel -->
+          <text x="200" y="84" fill="#e2e600" font-size="15" font-weight="700" font-family="Segoe UI,Arial">Settings \ Boot</text>
+          <line x1="200" y1="94" x2="770" y2="94" stroke="#2a3142"/>
+          <text x="200" y="124" fill="#e8ecf4" font-size="14" font-family="Segoe UI,Arial">Boot mode select</text>
+          <text x="560" y="124" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">[UEFI]</text>
+          <text x="200" y="154" fill="#e8ecf4" font-size="14" font-family="Segoe UI,Arial">MSI Fast Boot</text>
+          <text x="560" y="154" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">[Disabled]</text>
+          <rect x="190" y="172" width="590" height="34" rx="4" fill="#e2e600"/>
+          <text x="200" y="195" fill="#000" font-size="14" font-weight="700" font-family="Segoe UI,Arial">Boot Option #1</text>
+          <text x="470" y="195" fill="#000" font-size="14" font-weight="700" font-family="Segoe UI,Arial">[UEFI HDD: Ubuntu (Predator GM9)]</text>
+          <text x="200" y="232" fill="#e8ecf4" font-size="14" font-family="Segoe UI,Arial">Boot Option #2</text>
+          <text x="470" y="232" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">[UEFI HDD: Windows Boot Manager]</text>
+          <text x="200" y="262" fill="#e8ecf4" font-size="14" font-family="Segoe UI,Arial">Boot Option #3</text>
+          <text x="470" y="262" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">[UEFI USB Key]</text>
+          <text x="200" y="300" fill="#98a2b8" font-size="13" font-family="Segoe UI,Arial">UEFI Hard Disk Drive BBS Priorities  ›</text>
+          <rect x="200" y="318" width="570" height="28" rx="4" fill="#111" stroke="#2a3142"/>
+          <text x="212" y="337" fill="#e2e600" font-size="13" font-family="Segoe UI,Arial">F10: Save &amp; Exit → Yes</text>
+        </svg>
+        <div class="cap">Boot Option #1 debe decir <b>Ubuntu</b> (el Predator). Entra a la opción con <kbd>Enter</kbd>, elige Ubuntu, y guarda con <kbd>F10</kbd> → Yes.</div>
+      </div>
+      <div class="note"><b>Si "Ubuntu" no aparece en la lista de opciones de Boot Option #1:</b> entra a <b>UEFI Hard Disk Drive BBS Priorities</b> (abajo en esa misma pantalla), ahí pon <b>ubuntu</b> como #1, sal y vuelve a revisar Boot Option #1. Lo que digas en la BIOS <b>no lo revierte Windows</b>; por eso es el arreglo que dura.</div>
+    </div>
+  </div>
+
+  <div class="step" id="menu">
+    <div class="bub">3</div>
+    <div class="body">
+      <h3>Ya arranca GRUB… pero entra directo a Ubuntu, sin menú y sin Windows</h3>
+      <p>Esto <b>también es normal</b> en Ubuntu 24.04 y despista mucho: el instalador deja apagado <code>os-prober</code> (el programa que busca otros sistemas), así que GRUB no sabe que existe Windows y, al tener una sola opción, <b>no muestra menú</b>. No es que "no haya bootloader": es GRUB con un solo sistema.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="300" fill="#2c001e"/>
+          <text x="40" y="50" fill="#fff" font-size="16" font-family="Consolas,monospace">GNU GRUB  version 2.12</text>
+          <rect x="40" y="70" width="720" height="190" fill="none" stroke="#e95420" stroke-width="2"/>
+          <rect x="44" y="82" width="712" height="26" fill="#e95420"/>
+          <text x="56" y="100" fill="#fff" font-size="15" font-family="Consolas,monospace">*Ubuntu</text>
+          <text x="56" y="132" fill="#ddd" font-size="15" font-family="Consolas,monospace"> Advanced options for Ubuntu</text>
+          <text x="56" y="164" fill="#ddd" font-size="15" font-family="Consolas,monospace"> Windows Boot Manager (on /dev/nvme1n1p1)</text>
+          <text x="56" y="196" fill="#ddd" font-size="15" font-family="Consolas,monospace"> UEFI Firmware Settings</text>
+          <text x="40" y="285" fill="#bbb" font-size="13" font-family="Consolas,monospace">Use the ↑ and ↓ keys to select. Press enter to boot. The highlighted entry will be executed automatically in 10s.</text>
+        </svg>
+        <div class="cap">Así debe verse el menú de GRUB cuando está bien: Ubuntu, opciones avanzadas, <b>Windows Boot Manager</b> y la entrada a la BIOS, con 10 s para elegir.</div>
+      </div>
+      <p>Se arregla <b>dentro de Ubuntu</b> con el script <code>01-arreglar-grub.sh</code> (abajo). En palabras: pone <code>GRUB_TIMEOUT_STYLE=menu</code> y <code>GRUB_TIMEOUT=10</code>, enciende <code>GRUB_DISABLE_OS_PROBER=false</code>, corre <code>os-prober</code> + <code>update-grub</code>, deja Ubuntu #1 en la NVRAM con <code>efibootmgr</code> (mismo cambio que hicimos desde Windows, ahora desde Linux) y pone el reloj en UTC. Antes de tocar nada respalda <code>/etc/default/grub</code>.</p>
+      <pre><code>sudo mkdir -p /mnt/c &amp;&amp; sudo mount -t ntfs3 -o uid=$(id -u),gid=$(id -g) /dev/nvme0n1p2 /mnt/c
+bash /mnt/c/tmp/arranque-ubuntu/01-arreglar-grub.sh</code></pre>
+      <p>La primera línea monta tu disco C: en <code>/mnt/c</code> para poder leer el script. Si el <code>mount</code> falla, C: puede ser <code>/dev/nvme1n1p2</code>; míralo con <code>lsblk -o NAME,SIZE,FSTYPE,LABEL</code> (C: mide 1.88 TB).</p>
+      <div class="okbox"><b>Cómo saber que quedó:</b> el script imprime <code>✓ Windows aparece en el menú de GRUB</code> y <code>✓ BootOrder = … (ubuntu primero)</code>. Reinicia: debe salir el menú morado con las dos opciones. Si un día no sale, mantén pulsada <kbd>Shift</kbd> (o toca <kbd>Esc</kbd>) justo al arrancar para forzarlo.</div>
+    </div>
+  </div>
+
+  <!-- ============ B. RELOJ ============ -->
+  <h2 id="reloj"><span class="n">B ·</span> El reloj se desfasa 6 horas al cambiar de sistema</h2>
+  <p class="lead">La placa tiene un chip de reloj (RTC) con pila. Guarda <b>un solo número</b>, y cada sistema lo interpreta distinto: <b>Ubuntu asume que es hora UTC</b> (la de Greenwich) y <b>Windows asume que es hora local</b> (la tuya, México = UTC−6). Mientras uno y otro escriban el chip con criterios distintos, cada cambio de sistema te mueve el reloj 6 horas.</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+      <rect width="800" height="250" fill="#000"/>
+      <rect x="300" y="90" width="200" height="70" rx="12" fill="#161a22" stroke="#e2e600" stroke-width="2"/>
+      <text x="400" y="118" fill="#e2e600" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">CHIP DEL RELOJ (RTC)</text>
+      <text x="400" y="143" fill="#fff" font-size="20" font-weight="700" text-anchor="middle" font-family="Consolas,monospace">14:01</text>
+      <rect x="30" y="60" width="200" height="130" rx="12" fill="#161a22" stroke="#e95420"/>
+      <text x="130" y="88" fill="#e95420" font-size="14" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial">UBUNTU</text>
+      <text x="130" y="112" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">"eso es UTC"</text>
+      <text x="130" y="140" fill="#fff" font-size="15" text-anchor="middle" font-family="Segoe UI,Arial">14:01 − 6 h = <tspan fill="#2ec26a" font-weight="700">08:01</tspan></text>
+      <text x="130" y="170" fill="#2ec26a" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">✓ correcto</text>
+      <rect x="570" y="60" width="200" height="130" rx="12" fill="#161a22" stroke="#5aa9ff"/>
+      <text x="670" y="88" fill="#5aa9ff" font-size="14" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial">WINDOWS (de fábrica)</text>
+      <text x="670" y="112" fill="#98a2b8" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">"eso es hora local"</text>
+      <text x="670" y="140" fill="#fff" font-size="15" text-anchor="middle" font-family="Segoe UI,Arial">muestra <tspan fill="#ff5a72" font-weight="700">14:01</tspan></text>
+      <text x="670" y="170" fill="#ff5a72" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial">✗ 6 h adelantado</text>
+      <path d="M232 125 L296 125" stroke="#98a2b8" stroke-width="2"/><path d="M504 125 L566 125" stroke="#98a2b8" stroke-width="2"/>
+      <text x="400" y="225" fill="#98a2b8" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">Solución: que los dos hablen el mismo idioma → Windows también en UTC</text>
+    </svg>
+    <div class="cap">Mismo número en el chip, dos interpretaciones. El arreglo estándar es decirle a Windows que el chip está en UTC (como Ubuntu).</div>
+  </div>
+
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Decirle a Windows que el chip está en UTC</h3>
+      <p>Es una clave del registro. Se pone <b>una sola vez</b>, como administrador:</p>
+      <pre><code>reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1 /f</code></pre>
+      <p>Además conviene que el <b>Inicio rápido</b> de Windows esté apagado (<code>HiberbootEnabled = 0</code>), porque si Windows "hiberna" en vez de apagarse, Ubuntu ve el disco de Windows bloqueado. En tu PC ya estaba apagado.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>La trampa: justo después del cambio, el reloj queda 6 h ATRASADO</h3>
+      <p>Esto fue lo que te pasó y lo que hizo parecer que "seguía fallando". Al activar la clave, el chip <b>todavía tenía hora local</b> (la última que escribió Windows). Windows la leyó como si fuera UTC y le restó 6 h: marcaba las <b>02:01</b> cuando eran las <b>08:01</b>. Y no se corrigió solo porque el <b>servicio de hora de Windows (w32time) estaba parado</b> y en "Manual".</p>
+      <div class="badbox"><b>Ojo con la conclusión fácil:</b> se revisó el registro de eventos, no había saltos de hora y se dio por bueno el reloj. Error: como el servicio de hora estaba parado, <b>no había nada que corrigiera ni registrara nada</b>. La única prueba real es <b>comparar con la hora de internet</b>.</div>
+      <p>El script <code>arreglar-reloj.ps1</code> (abajo) lo corrige y lo deja blindado: pide la hora real a internet (cabecera <i>Date</i> de una web), la compara con la de Windows, la corrige con <code>Set-Date</code> si difieren, pone el servicio w32time en <b>Automático</b>, lo arranca y lo configura con <code>time.windows.com</code> y <code>pool.ntp.org</code>. Deja log con el antes y el después.</p>
+      <pre><code>powershell -ExecutionPolicy Bypass -File "C:\tmp\arranque-ubuntu\arreglar-reloj.ps1"</code></pre>
+      <div class="okbox"><b>Resultado en tu PC (8-sep-2026):</b> ANTES 02:01 / w32time <i>Stopped·Manual</i> → DESPUÉS 08:01 / w32time <i>Running·Automatic</i> · diferencia corregida: <b>360 minutos</b>. Como Windows ya está en modo UTC, al corregir la hora <b>escribió el chip en UTC</b>: a partir de aquí Ubuntu y Windows coinciden.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="bub">3</div>
+    <div class="body">
+      <h3>Del lado de Ubuntu: confirmar que el chip se queda en UTC</h3>
+      <p>Ubuntu ya viene así, pero por si alguien lo cambió, el script <code>01-arreglar-grub.sh</code> ejecuta también:</p>
+      <pre><code>sudo timedatectl set-local-rtc 0 --adjust-system-clock
+sudo timedatectl set-ntp true
+timedatectl        # debe decir: RTC in local TZ: no · NTP service: active</code></pre>
+      <div class="note"><b>Cómo verificar de verdad (en los dos sistemas):</b> compara la hora de la barra con la de tu teléfono o con <code>curl -sI https://www.google.com | grep -i date</code> (sale en UTC: réstale 6 h). Si coinciden en Windows <b>y</b> en Ubuntu después de reiniciar de uno a otro, quedó.</div>
+    </div>
+  </div>
+
+  <!-- ============ FAQ ============ -->
+  <h2 id="faq"><span class="n">❓</span> Dudas frecuentes</h2>
+  <div class="card">
+    <p><b>"¿Entonces sí tengo que ir a la BIOS para que aparezca GRUB?"</b><br>No necesariamente hoy: el script de Windows ya puso Ubuntu #1 y forzó el siguiente arranque a GRUB. <b>Reinicia y mira.</b> Si sale el menú, listo. Ve a la BIOS solo si un día vuelve a entrar directo a Windows (la placa revirtió la lista): ahí el cambio ya no se pierde.</p>
+    <p><b>"¿Qué era eso de que el script 'toma variables'?"</b><br>El identificador de la entrada de Ubuntu es un número largo entre llaves (<code>{69d34579-…}</code>) que cambia de PC en PC. En vez de escribirlo a mano, el script <b>lee la lista, busca la que se llama "Ubuntu" y guarda ese número en una variable</b> para usarlo en los dos comandos <code>bcdedit</code>. Nada más. No era la causa del problema; la causa era que Windows estaba de primero.</p>
+    <p><b>"¿Por qué se revirtió el orden si ya lo habíamos cambiado?"</b><br>Porque lo cambiamos en la NVRAM desde Windows, y algunas placas MSI reconstruyen esa lista en ciertos arranques (actualizaciones, cambios de dispositivos, prueba de memoria). La BIOS es la fuente de verdad; lo que fijes ahí se queda.</p>
+    <p><b>"¿Se dañó algo con el reloj atrasado 6 h?"</b><br>No. Solo tenían la hora mal los archivos creados en esas horas y los registros. Ya corregido, todo lo nuevo lleva la hora correcta.</p>
+    <p><b>"¿Y si GRUB no arranca Windows?"</b><br>Elige <i>UEFI Firmware Settings</i> en el menú de GRUB, o entra a la BIOS con <kbd>Supr</kbd>, y arranca Windows desde <kbd>F11</kbd> (menú de arranque). Luego, en Ubuntu, <code>sudo os-prober &amp;&amp; sudo update-grub</code>.</p>
+  </div>
+
+  <!-- ============ SCRIPTS ============ -->
+  <h2 id="scripts"><span class="n">⬇️</span> Scripts usados (idempotentes, con respaldo y log)</h2>
+  <p class="lead">Los tres están en esta misma carpeta del repositorio. En tu PC viven en <code>C:\tmp\arranque-ubuntu\</code> y en el repo de conocimiento (<code>Ubuntu/02-primer-arranque-fabrica/</code>).</p>
+  <div class="card">
+    <a class="dl" href="./scripts/fijar-grub.ps1">🪟 fijar-grub.ps1</a>
+    <a class="dl" href="./scripts/arreglar-reloj.ps1">🪟 arreglar-reloj.ps1</a>
+    <a class="dl" href="./scripts/01-arreglar-grub.sh">🐧 01-arreglar-grub.sh</a>
+    <div class="tablewrap" style="margin-top:14px"><table>
+      <tr><th>Script</th><th>Dónde se corre</th><th>Qué hace</th></tr>
+      <tr><td><b>fijar-grub.ps1</b></td><td>Windows, como admin (pide UAC)</td><td>Ubuntu #1 en la lista UEFI (<code>/addfirst</code>) + siguiente arranque forzado a GRUB. Log antes/después.</td></tr>
+      <tr><td><b>arreglar-reloj.ps1</b></td><td>Windows, como admin</td><td>Compara con la hora de internet, corrige, deja w32time automático y sincronizando. Log antes/después.</td></tr>
+      <tr><td><b>01-arreglar-grub.sh</b></td><td>Ubuntu (pide sudo)</td><td>Menú de GRUB con Windows (os-prober), Ubuntu #1 con efibootmgr, reloj en UTC. Respalda <code>/etc/default/grub</code>.</td></tr>
+    </table></div>
+    <div class="note">Regla de la casa: nada de pegar bloques largos en la terminal. Cada arreglo es <b>un script de una línea para ejecutar</b>, que respalda antes de cambiar y deja un log para verificar el efecto.</div>
+  </div>
+
+  <div class="foot">
+    Tutorial escrito el 8-sep-2026 a partir de lo ocurrido en la PC (Ryzen 9 7900X · MSI B850 Tomahawk · Ubuntu 24.04.4 + Windows 11) · Siguiente paso: <a href="../ubuntu-fabrica-claude/">Convertir Ubuntu en la Fábrica</a> · <a href="../">← Volver al índice</a>
+  </div>
+</div>
+</body>
+</html>
