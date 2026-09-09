@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ubuntu parpadea y no deja entrar (y pide comprobar el disco): el driver de la RTX 5070 Ti</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d2230; --line:#2a3142;
+    --y:#e2e600; --y2:#f2f24d; --ydim:#8a8b00; --txt:#e8ecf4; --mut:#98a2b8;
+    --ok:#2ec26a; --warn:#ffb020; --accent:#5aa9ff; --ub:#e95420; --grub:#5b2c6f;
+    --nv:#76b900; --amd:#ed1c24;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0a0c11,#0d0f14 300px);color:var(--txt);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  header{padding:56px 20px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(600px 200px at 50% -40px,rgba(118,185,0,.18),transparent)}
+  header .kick{color:var(--nv);font-weight:700;letter-spacing:2px;font-size:13px;text-transform:uppercase}
+  header h1{font-size:34px;margin:10px 0 6px;line-height:1.2}
+  header p{color:var(--mut);margin:0;font-size:16px}
+  h2{font-size:24px;margin:48px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--nv);font-variant-numeric:tabular-nums}
+  .lead{color:var(--mut);margin:4px 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
+  .tablewrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td b{color:#fff}
+  .path{font-family:Consolas,monospace;font-size:13px;color:var(--y2)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(46,194,106,.15);color:var(--ok)}
+  .pill.warn{background:rgba(255,176,32,.15);color:var(--warn)}
+  .pill.bad{background:rgba(228,0,43,.15);color:#ff5a72}
+  .pill.info{background:rgba(90,169,255,.15);color:var(--accent)}
+  .step{display:flex;gap:18px;margin:22px 0;align-items:flex-start}
+  .step .bub{flex:none;width:40px;height:40px;border-radius:50%;background:#14161b;border:2px solid var(--nv);
+    display:grid;place-items:center;font-weight:800;font-size:18px;color:var(--nv);box-shadow:0 0 0 4px rgba(118,185,0,.14)}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:6px 0 6px;font-size:18px}
+  .fig{background:#000;border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .fig svg{display:block;width:100%;height:auto}
+  .cap{font-size:13px;color:var(--mut);padding:8px 12px;border-top:1px solid var(--line);background:#0b0d12}
+  .note{border-left:3px solid var(--accent);background:rgba(90,169,255,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .warnbox{border-left:3px solid var(--warn);background:rgba(255,176,32,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .okbox{border-left:3px solid var(--ok);background:rgba(46,194,106,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .badbox{border-left:3px solid #e4002b;background:rgba(228,0,43,.08);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  kbd{background:#0b0d12;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:2px 8px;font-family:Consolas,monospace;font-size:13px;color:#fff}
+  code{background:#0b0d12;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#ffe066}
+  pre{background:#0b0d12;border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;font-family:Consolas,monospace;font-size:13px;line-height:1.5;color:#e8ecf4;margin:12px 0}
+  pre code{background:none;border:0;padding:0;color:#ffe066}
+  a{color:var(--accent)}
+  ul{padding-left:20px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .toc a{background:#0b0d12;border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:13px;text-decoration:none;color:var(--txt)}
+  .foot{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+
+  /* ====== Responsivo: iPhone 15 Pro Max / iPad ====== */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  .card,.note,.warnbox,.okbox,.badbox,.step .body{overflow-wrap:break-word}
+  .pill{white-space:nowrap}
+  th{white-space:nowrap}
+  @media (max-width:640px){
+    header{padding:38px 16px 26px}
+    header h1{font-size:22px}
+    header p{font-size:14px}
+    header .kick{font-size:11px;letter-spacing:1.5px}
+    .wrap{padding:0 14px 60px}
+    h2{font-size:19px;margin:34px 0 4px}
+    .lead{font-size:14px;margin-bottom:16px}
+    .card{padding:15px 15px}
+    table{font-size:13px}
+    th,td{padding:8px 8px}
+    .step{display:block;margin:22px 0}
+    .step .bub{width:30px;height:30px;font-size:14px;margin:0 0 10px 0}
+    .step .body{width:100%}
+    .step h3{font-size:16px}
+    .fig{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .fig svg{min-width:640px}
+    .cap{font-size:12px;padding:7px 10px}
+    kbd{padding:1px 6px;font-size:12px}
+    code{font-size:12px}
+    pre{font-size:12px}
+    .foot{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">Ubuntu 24.04 · RTX 5070 Ti (Blackwell) · Nouveau → driver Nvidia</div>
+  <h1>Ubuntu parpadea, no deja entrar y pide "comprobar el disco"</h1>
+  <p>El primer arranque sirvió; los siguientes parpadean y nunca llega el login. Por qué pasa y cómo dejarlo estable · 20 minutos</p>
+</header>
+
+<div class="wrap">
+
+  <div class="note" style="margin-top:24px">
+    <b>Qué vas a resolver aquí:</b> instalaste Ubuntu, el <b>primer arranque funcionó</b>, pero en los siguientes (1) la pantalla <b>parpadea, va lentísima y nunca te deja escribir la contraseña</b>, y (2) además de repente sale un mensaje de <b>"comprobando el disco — pulsa una tecla para omitir"</b>. Son dos cosas <b>encadenadas</b>: el parpadeo es del driver de video de tu RTX 5070 Ti, y el chequeo del disco es consecuencia de haber tenido que <b>apagar a la fuerza</b> por culpa del parpadeo.
+    <div class="toc">
+      <a href="#equipo">🖥️ Tu equipo</a>
+      <a href="#porque">💡 Por qué parpadea</a>
+      <a href="#entrar">🖥️ Entrar con pantalla estable</a>
+      <a href="#driver">🟩 Instalar el driver Nvidia</a>
+      <a href="#disco">💾 El chequeo del disco (fsck)</a>
+      <a href="#bios">🎛️ BIOS: iGPU + orden</a>
+      <a href="#faq">❓ Dudas</a>
+    </div>
+  </div>
+
+  <!-- ============ EQUIPO ============ -->
+  <div class="card" id="equipo">
+    <h2 style="border:0;margin:0 0 10px;padding:0">🖥️ Tu equipo (lo relevante para esto)</h2>
+    <div class="tablewrap"><table>
+      <tr><th>Cosa</th><th>Valor</th><th>Qué implica</th></tr>
+      <tr><td>Tarjeta de video</td><td><b>NVIDIA GeForce RTX 5070 Ti</b> · arquitectura <b>Blackwell</b> (serie 50)</td><td><span class="pill warn">Nouveau no la maneja bien</span></td></tr>
+      <tr><td>CPU</td><td><b>Ryzen 9 7900X</b> — trae <b>gráficos Radeon integrados</b> (iGPU RDNA2)</td><td><span class="pill ok">salida de video en la placa</span></td></tr>
+      <tr><td>Placa</td><td>MSI MAG B850 Tomahawk Max WiFi · salida <b>HDMI</b> en el panel trasero</td><td><span class="pill info">usable como "modo seguro"</span></td></tr>
+      <tr><td>Cable actual</td><td><b>DisplayPort</b> de la RTX → monitor</td><td><span class="pill info">la señal sale por la RTX</span></td></tr>
+      <tr><td>Disco de Ubuntu</td><td>partición de <b>solo 24 GB</b></td><td><span class="pill warn">justo para drivers</span></td></tr>
+    </table></div>
+    <div class="okbox"><b>Resumen en una frase:</b> Ubuntu está bien instalado; lo que se rompe es que el <b>driver libre de video (Nouveau)</b> no sabe pintar una RTX 5070 Ti. En cuanto pongas el <b>driver oficial de Nvidia</b>, se acaba el parpadeo.</div>
+  </div>
+
+  <!-- ============ POR QUÉ ============ -->
+  <h2 id="porque"><span class="n">💡</span> Por qué parpadea (y por qué el primer arranque sí funcionó)</h2>
+  <p class="lead">Ubuntu trae de fábrica un driver de video libre llamado <b>Nouveau</b>, hecho por la comunidad. Va bien con tarjetas Nvidia viejas, pero las <b>RTX serie 50 (Blackwell)</b> son tan nuevas que Nouveau <b>todavía no las sabe manejar</b>: intenta encender el escritorio, falla, reintenta… y eso es el <b>parpadeo</b> y la lentitud. Como nunca termina de dibujar bien la pantalla de login, <b>no te deja escribir la contraseña</b>.</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+      <rect width="800" height="250" fill="#000"/>
+      <text x="30" y="38" fill="#98a2b8" font-size="14" font-family="Segoe UI,Arial">Quién dibuja tu escritorio en Ubuntu</text>
+      <!-- malo -->
+      <rect x="30" y="58" width="340" height="160" rx="10" fill="#161a22" stroke="#2a3142"/>
+      <text x="50" y="86" fill="#ff5a72" font-size="13" font-weight="700" font-family="Segoe UI,Arial">HOY (driver Nouveau)</text>
+      <rect x="50" y="100" width="300" height="40" rx="6" fill="#1d2230" stroke="#ff5a72"/>
+      <text x="62" y="125" fill="#fff" font-size="14" font-family="Segoe UI,Arial">RTX 5070 Ti + Nouveau</text>
+      <text x="50" y="168" fill="#ff5a72" font-size="13" font-family="Consolas,monospace">✗ parpadeo, lento</text>
+      <text x="50" y="190" fill="#98a2b8" font-size="13" font-family="Consolas,monospace">✗ no llega el login</text>
+      <!-- flecha -->
+      <path d="M385 138 L415 138" stroke="#76b900" stroke-width="3"/>
+      <path d="M412 130 L424 138 L412 146 Z" fill="#76b900"/>
+      <!-- bueno -->
+      <rect x="430" y="58" width="340" height="160" rx="10" fill="#161a22" stroke="#2a3142"/>
+      <text x="450" y="86" fill="#76b900" font-size="13" font-weight="700" font-family="Segoe UI,Arial">META (driver oficial Nvidia)</text>
+      <rect x="450" y="100" width="300" height="40" rx="6" fill="#1d2230" stroke="#76b900"/>
+      <text x="462" y="125" fill="#fff" font-size="14" font-family="Segoe UI,Arial">RTX 5070 Ti + nvidia-570</text>
+      <text x="450" y="168" fill="#2ec26a" font-size="13" font-family="Consolas,monospace">✓ imagen estable</text>
+      <text x="450" y="190" fill="#98a2b8" font-size="13" font-family="Consolas,monospace">✓ login normal</text>
+    </svg>
+    <div class="cap">El parpadeo no es del cable ni del monitor: es Nouveau intentando y fallando con una tarjeta demasiado nueva.</div>
+  </div>
+
+  <div class="note"><b>¿Y por qué el primer arranque sí sirvió?</b> El instalador de Ubuntu arranca en un <b>modo gráfico de emergencia</b> (básico, a prueba de todo). Una vez instalado, en los siguientes arranques ya entra Nouveau "de verdad" con la RTX… y ahí empieza el parpadeo.</div>
+
+  <!-- ============ ENTRAR ============ -->
+  <h2 id="entrar"><span class="n">🖥️</span> Paso 1 — Entrar a Ubuntu con la pantalla estable</h2>
+  <p class="lead">Para instalar el driver bueno primero necesitas <b>ver bien</b>. Hay dos maneras; la <b>B</b> es la que tú propusiste y es la más cómoda.</p>
+
+  <div class="step">
+    <div class="bub">A</div>
+    <div class="body">
+      <h3>Opción A · Truco rápido en GRUB: <code>nomodeset</code> (sin tocar cables)</h3>
+      <p>Le dices al arranque que <b>no use el driver de video del kernel</b> esta vez, así que Nouveau no se mete y entras en modo básico.</p>
+      <ul>
+        <li>Reinicia. En el menú <b>GRUB</b> (el morado), con Ubuntu resaltado pulsa <kbd>e</kbd>.</li>
+        <li>Busca la línea que empieza con <code>linux</code> y termina en <code>... ro quiet splash</code>. Al final añade un espacio y escribe <code>nomodeset</code>.</li>
+        <li>Pulsa <kbd>Ctrl</kbd>+<kbd>X</kbd> (o <kbd>F10</kbd>) para arrancar <b>solo esta vez</b> así.</li>
+      </ul>
+      <div class="warnbox">Es de un solo uso y a veces entra en baja resolución (se ve grandote). No pasa nada: es solo para llegar al escritorio e instalar el driver. Si no te sale el menú de GRUB, mira el <a href="../ubuntu-dual-boot-grub-reloj/">tutorial de GRUB</a>.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="bub">B</div>
+    <div class="body">
+      <h3>Opción B · (recomendada) Cable a la salida de la placa madre</h3>
+      <p>Como tu <b>Ryzen 9 7900X trae gráficos Radeon integrados</b>, puedes conectar el monitor por <b>HDMI a la salida de la placa</b>. La imagen entonces sale por la <b>iGPU AMD</b>, que Linux maneja perfecto (driver <code>amdgpu</code>): <b>escritorio estable, sin parpadeo</b>, y desde ahí instalas el driver Nvidia con calma.</p>
+      <div class="fig">
+        <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="250" fill="#000"/>
+          <!-- monitor -->
+          <rect x="330" y="30" width="140" height="90" rx="8" fill="#161a22" stroke="#2a3142"/>
+          <text x="400" y="80" fill="#e8ecf4" font-size="13" text-anchor="middle" font-family="Segoe UI,Arial">Monitor</text>
+          <rect x="380" y="120" width="40" height="10" fill="#2a3142"/>
+          <!-- RTX -->
+          <rect x="40" y="160" width="300" height="70" rx="10" fill="#161a22" stroke="#76b900"/>
+          <text x="60" y="190" fill="#76b900" font-size="14" font-weight="700" font-family="Segoe UI,Arial">RTX 5070 Ti</text>
+          <text x="60" y="212" fill="#98a2b8" font-size="12" font-family="Segoe UI,Arial">salida DisplayPort (tu cable actual)</text>
+          <path d="M190 160 L360 118" stroke="#ff5a72" stroke-width="2" stroke-dasharray="6 5"/>
+          <text x="210" y="140" fill="#ff5a72" font-size="11" font-family="Segoe UI,Arial">parpadea (Nouveau)</text>
+          <!-- iGPU -->
+          <rect x="460" y="160" width="300" height="70" rx="10" fill="#161a22" stroke="#ed1c24"/>
+          <text x="480" y="190" fill="#ed1c24" font-size="14" font-weight="700" font-family="Segoe UI,Arial">Placa · iGPU Radeon (7900X)</text>
+          <text x="480" y="212" fill="#98a2b8" font-size="12" font-family="Segoe UI,Arial">salida HDMI (cable nuevo)</text>
+          <path d="M610 160 L440 120" stroke="#2ec26a" stroke-width="2"/>
+          <text x="560" y="140" fill="#2ec26a" font-size="11" font-family="Segoe UI,Arial">estable (amdgpu)</text>
+        </svg>
+        <div class="cap">Mientras instalas: monitor por HDMI a la placa (imagen estable). Al terminar, regresas el cable DisplayPort a la RTX.</div>
+      </div>
+      <div class="note"><b>Aclaración importante:</b> cambiar el cable <b>no es "para que Ubuntu detecte la tarjeta"</b>. Ubuntu <b>ya ve la RTX por el bus PCI</b>, pase lo que pase con el cable — el comando de análisis del paso 2 la detecta igual. Cambias el cable solo para <b>ver bien mientras trabajas</b>. Requisito: que la iGPU esté <b>habilitada en la BIOS</b> (ver <a href="#bios">sección BIOS</a>); si conectas el HDMI a la placa y no da imagen, es que la iGPU está apagada en BIOS.</div>
+    </div>
+  </div>
+
+  <!-- ============ DRIVER ============ -->
+  <h2 id="driver"><span class="n">🟩</span> Paso 2 — Instalar el driver oficial de Nvidia</h2>
+  <p class="lead">Ya con escritorio estable (por A o por B), abre una terminal (<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd>). Estos son los comandos; Claude te acompaña si algo no sale como aquí.</p>
+
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Actualizar la lista de paquetes y ver qué driver te toca</h3>
+      <pre><code>sudo apt update
+ubuntu-drivers devices</code></pre>
+      <p>El segundo comando <b>detecta tu RTX</b> y te dice cuál es el driver recomendado. Para una <b>RTX 5070 Ti (Blackwell)</b> necesitas la <b>serie 570 o superior</b> (las versiones más viejas no la soportan). Verás una línea marcada como <code>recommended</code>.</p>
+      <div class="badbox"><b>Si NO aparece un driver serie 570+</b> es que tus repos están viejos para una tarjeta tan nueva. Añade el repositorio oficial de Nvidia y vuelve a mirar:
+        <pre><code>sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt update
+ubuntu-drivers devices</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>Instalarlo</h3>
+      <p>Lo más simple es dejar que Ubuntu ponga el recomendado:</p>
+      <pre><code>sudo ubuntu-drivers install</code></pre>
+      <p>O, si quieres fijar la versión exacta (ej. la 570):</p>
+      <pre><code>sudo apt install nvidia-driver-570</code></pre>
+      <div class="warnbox"><b>Ojo con tu disco de 24 GB:</b> el driver Nvidia pesa bastante. Si a mitad dice <b>"No space left on device"</b>, libera espacio (<code>sudo apt clean</code>) o, mejor, <b>amplía la partición de Ubuntu</b> antes de seguir — con 24 GB vas muy justo.</p></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="bub">3</div>
+    <div class="body">
+      <h3>Reiniciar y regresar el cable a la RTX</h3>
+      <pre><code>sudo reboot</code></pre>
+      <p>Si usaste la <b>Opción B</b> (cable en la placa), <b>apaga</b>, mueve el cable <b>DisplayPort de vuelta a la RTX</b> y enciende. Con el driver oficial ya instalado, ahora sí la RTX pinta el escritorio <b>sin parpadeo</b> y el login aparece normal.</p>
+      <div class="okbox"><b>Cómo saber que quedó:</b> en una terminal, <code>nvidia-smi</code> debe mostrar tu RTX 5070 Ti y la versión del driver. Y <code>ubuntu-drivers devices</code> ya no marca Nouveau en uso.</div>
+    </div>
+  </div>
+
+  <!-- ============ DISCO ============ -->
+  <h2 id="disco"><span class="n">💾</span> Lo del "comprobando el disco — pulsa una tecla para omitir"</h2>
+  <p class="lead">Eso es <b>fsck</b>, el chequeo del sistema de archivos al arrancar. Salta cuando Ubuntu detecta que <b>no se apagó limpiamente</b>. Y no se apagó limpio porque <b>lo reiniciaste con el botón</b> (no había de otra con el parpadeo) — eso deja el disco marcado como "sucio" y dispara el chequeo en el siguiente arranque.</p>
+  <div class="card">
+    <ul>
+      <li><b>Si sale solo una vez</b> tras un apagón forzado → es normal. <b>Déjalo terminar</b> (no toques nada, no lo omitas) y no vuelve a salir.</li>
+      <li><b>Si sale en cada reinicio</b> → es porque <b>cada vez estás apagando a lo bruto</b> por culpa del parpadeo. En cuanto arregles el driver (pasos 1–2) y puedas apagar normal con <code>Apagar</code>, el chequeo deja de aparecer.</li>
+      <li><b>Si aún así siguiera</b> con apagados limpios → ahí sí conviene forzar un chequeo a fondo una vez: crea el testigo y reinicia:
+        <pre><code>sudo touch /forcefsck
+sudo reboot</code></pre>
+        Corre el análisis completo y borra el testigo solo. Si reporta errores repetidos del disco, avísame y lo miramos (podría ser la partición o el propio SSD).</li>
+    </ul>
+    <div class="note"><b>No lo omitas por costumbre:</b> ese chequeo es lo que evita que un apagón forzado te corrompa archivos. Pulsar una tecla para saltarlo deja el sistema "sucio" y solo pospone el problema.</div>
+  </div>
+
+  <!-- ============ BIOS ============ -->
+  <h2 id="bios"><span class="n">🎛️</span> En la BIOS: iGPU encendida + orden de arranque</h2>
+  <p class="lead">Dos ajustes que tocan este tema. Entra a la BIOS con <kbd>Supr</kbd> en el logo MSI y <kbd>F7</kbd> para Advanced Mode.</p>
+
+  <div class="step">
+    <div class="bub">1</div>
+    <div class="body">
+      <h3>Habilitar los gráficos integrados (para la Opción B)</h3>
+      <p>Para que la salida HDMI de la placa dé imagen, la iGPU del 7900X debe estar activa. En la Click BIOS X suele estar en <b>Settings › Advanced › Integrated Graphics Configuration</b> (o similar): pon <b>Integrated Graphics</b> en <code>Auto</code> o <code>Enabled</code> (no en "Disabled" ni forzado a solo-PCIe). Guarda con <kbd>F10</kbd> → Yes.</p>
+      <div class="note">Si prefieres la Opción A (<code>nomodeset</code>) no necesitas tocar esto.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="bub">2</div>
+    <div class="body">
+      <h3>Orden de arranque (sí, hay que fijarlo)</h3>
+      <p>Tal como sospechas: en tu placa el orden UEFI <b>se revierte solo a Windows</b>, así que conviene dejar el <b>gestor de Ubuntu como Boot Option #1</b> para que salga el menú GRUB al prender (tu Ubuntu está en el Predator M2_1; Windows en el Kingston M2_2). El paso a paso con las pantallas de tu BIOS está en el tutorial dedicado:</p>
+      <p>→ <a href="../ubuntu-dual-boot-grub-reloj/#bios"><b>Dual-boot: fijar Ubuntu como Boot Option #1</b></a></p>
+    </div>
+  </div>
+
+  <!-- ============ FAQ ============ -->
+  <h2 id="faq"><span class="n">❓</span> Dudas frecuentes</h2>
+  <div class="card">
+    <p><b>"¿El cable a la placa hace que Ubuntu detecte la tarjeta?"</b><br>No. Ubuntu <b>ya ve la RTX por el bus PCI</b> aunque el monitor esté conectado a la placa. El cambio de cable solo te da una <b>pantalla estable para trabajar</b> mientras instalas el driver. La detección (<code>ubuntu-drivers devices</code>) funciona igual con cualquier cable.</p>
+    <p><b>"¿Puedo dejar el cable en la placa para siempre?"</b><br>Podrías, pero perderías el rendimiento y las salidas de la RTX (juegos, IA, varios monitores). La idea es: <b>placa mientras instalas, RTX al terminar</b>.</p>
+    <p><b>"¿Y si tras poner el driver 570 sigue parpadeando?"</b><br>Entonces ya no sería Nouveau. Recuerda que esta RTX viene arrastrando <b>inestabilidad de plataforma</b> (los pantallazos azules de Windows). <b>Ubuntu no cura ese problema de hardware.</b> Si el parpadeo persiste con el driver oficial puesto, es el mismo tema de fondo, no Linux.</p>
+    <p><b>"¿Secure Boot me va a estorbar al instalar el driver?"</b><br>Puede pedirte crear una clave (MOK) durante la instalación: sigue el asistente azul, elige una contraseña temporal y confírmala al reiniciar (<i>Enroll MOK</i>). Si se complica, se puede desactivar Secure Boot en la BIOS, pero prueba primero con el asistente.</p>
+    <p><b>"¿Por qué me pide comprobar el disco justo ahora y antes no?"</b><br>Porque antes apagabas bien. El chequeo aparece tras un <b>apagón forzado</b> (el botón). Arregla el parpadeo, apaga normal, y desaparece.</p>
+  </div>
+
+  <div class="foot">
+    Tutorial escrito el 9-sep-2026 para la PC de Raúl (Ryzen 9 7900X · MSI B850 Tomahawk · RTX 5070 Ti · Ubuntu 24.04.4 + Windows 11) · Relacionado: <a href="../ubuntu-dual-boot-grub-reloj/">Dual-boot: GRUB y reloj</a> · <a href="../ubuntu-fabrica-claude/">Convertir Ubuntu en la Fábrica</a> · <a href="../">← Volver al índice</a>
+  </div>
+</div>
+</body>
+</html>
